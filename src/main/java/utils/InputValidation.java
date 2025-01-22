@@ -84,19 +84,4 @@ public class InputValidation {
         price = Math.round(price * 100.0) / 100.0;
         return price;
     }
-
-    public static void main(String[] args) {
-        // Example of using the validation methods
-        int number = validateIntInput("Enter a number: ");
-        System.out.println("Number entered: " + number);
-
-        String text = validateStringInput("Enter a text: ");
-        System.out.println("Text entered: " + text);
-
-        String email = validateEmailInput("Enter an email: ");
-        System.out.println("Email entered: " + email);
-
-        double price = validatePriceInput("Enter a price: ");
-        System.out.println("Price entered: " + price);
-    }
 }
