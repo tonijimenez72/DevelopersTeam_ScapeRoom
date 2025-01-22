@@ -15,16 +15,17 @@ public class DatabaseConnection {
 
     private String URL;
     private String USER;
-    private String PASSWORD;
+    //private String PASSWORD;
 
+    Properties properties = new Properties();
 
     private DatabaseConnection() {
-        Properties properties = new Properties();
+
         try (FileInputStream fis = new FileInputStream("config.properties")) {
             properties.load(fis);
             URL = properties.getProperty("db.url");
             USER = properties.getProperty("db.user");
-            PASSWORD = properties.getProperty("db.password");
+            //PASSWORD = properties.getProperty("db.password");
         } catch (IOException e) {
             System.out.println("Error finding the properties file");
             throw new RuntimeException("Error al cargar la configuración de la base de datos.");
@@ -47,7 +48,7 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            connection= DriverManager.getConnection(URL, USER, PASSWORD);
+            connection= DriverManager.getConnection(URL,properties);
 
         } catch (ClassNotFoundException | SQLException e) {
 
