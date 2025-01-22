@@ -1,4 +1,7 @@
 package enums;
 
-public class DifficultyLevel {
+public enum DifficultyLevel {
+    EASY,
+    MEDIUM,
+    HARD
 }
