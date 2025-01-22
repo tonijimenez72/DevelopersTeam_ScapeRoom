@@ -1,4 +1,7 @@
 package enums;
 
-public class Theme {
+public enum Theme {
+    MYSTERY,
+    FANTASY,
+    HORROR
 }
