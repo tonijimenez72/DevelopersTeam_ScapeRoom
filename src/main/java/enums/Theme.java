@@ -1,7 +1,7 @@
 package enums;
 
 public enum Theme {
-    MYSTERY,
+    MISTERY,
     FANTASY,
-    HORROR
+    CIFY
 }
