@@ -7,8 +7,8 @@ public class Decoration extends RoomElement{
     public Decoration() {
     }
 
-    public Decoration(String name, double price, Room room, String material) {
-        super(name, price, room);
+    public Decoration(String name, double price, String material) {
+        super(name, price);
         this.material = material;
     }
 
@@ -22,8 +22,6 @@ public class Decoration extends RoomElement{
 
     @Override
     public String toString() {
-        return "Decoration{" +
-                "material='" + material + '\'' +
-                '}';
+        return String.format(" * %s [Price: %s] [Material: %s]\n", super.getName(), super.getPrice(), material);
     }
 }

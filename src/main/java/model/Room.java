@@ -3,7 +3,9 @@ package model;
 import enums.DifficultyLevel;
 import enums.Theme;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Room {
     private int id;
@@ -20,7 +22,7 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, Theme theme, DifficultyLevel difficultyLevel, String description, double price, List<Clue> clues, List<Decoration> decorations, EscapeRoom escapeRoom) {
+    public Room(String name, Theme theme, DifficultyLevel difficultyLevel, String description, double price, List<Clue> clues, List<Decoration> decorations) {
         this.name = name;
         this.theme = theme;
         this.difficultyLevel = difficultyLevel;
@@ -29,7 +31,17 @@ public class Room {
         this.available = true;
         this.clues = clues;
         this.decorations = decorations;
-        this.escapeRoom = escapeRoom;
+    }
+
+    public Room(String name, Theme theme, DifficultyLevel difficultyLevel, double price) {
+        this.name = name;
+        this.theme = theme;
+        this.difficultyLevel = difficultyLevel;
+        this.price = price;
+        this.description = "";
+        this.available = true;
+        this.clues = new ArrayList<>();
+        this.decorations = new ArrayList<>();
     }
 
     public int getId() {
@@ -54,10 +66,6 @@ public class Room {
 
     public boolean isAvailable() {
         return available;
-    }
-
-    public EscapeRoom getEscapeRoom() {
-        return escapeRoom;
     }
 
     public List<Clue> getClues() {
@@ -92,10 +100,6 @@ public class Room {
         this.available = available;
     }
 
-    public void setEscapeRoom(EscapeRoom escapeRoom) {
-        this.escapeRoom = escapeRoom;
-    }
-
     public void setClues(List<Clue> clues) {
         this.clues = clues;
     }
@@ -106,17 +110,17 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", theme=" + theme +
-                ", difficultyLevel=" + difficultyLevel +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", available=" + available +
-                ", escapeRoom=" + (escapeRoom != null ? escapeRoom.getName() : "None") +
-                ", clues=" + clues +
-                ", decorations=" + decorations +
-                '}';
+        String formattedClues = clues.stream()
+                .map(clue -> String.format(" * %s [Price: %.2f] [Theme: %s]", clue.getName(), clue.getPrice(), clue.getTheme()))
+                .collect(Collectors.joining("\n"));
+
+        String formattedDecorations = decorations.stream()
+                .map(decoration -> String.format(" * %s [Price: %.2f] [Material: %s]", decoration.getName(), decoration.getPrice(), decoration.getMaterial()))
+                .collect(Collectors.joining("\n"));
+
+        return String.format("Room:\n * %s [Price: %.2f] [Theme: %s] [Difficulty: %s]\n", name, price, theme, difficultyLevel) +
+                "Clues:\n" + (formattedClues.isEmpty() ? "None" : formattedClues) + "\n" +
+                "Decorations:\n" + (formattedDecorations.isEmpty() ? "None" : formattedDecorations);
     }
+
 }

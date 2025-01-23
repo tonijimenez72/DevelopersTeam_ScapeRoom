@@ -5,16 +5,14 @@ public abstract class RoomElement {
     private String name;
     private double price;
     private boolean available;
-    private Room room;
 
     public RoomElement() {
     }
 
-    public RoomElement(String name, double price, Room room) {
+    public RoomElement(String name, double price) {
         this.name = name;
         this.price = price;
         this.available = true;
-        this.room = room;
     }
 
     public String getId() {
@@ -29,9 +27,6 @@ public abstract class RoomElement {
     public boolean isAvailable() {
         return available;
     }
-    public Room getRoom() {
-        return room;
-    }
 
     public void setId(String id) {
         this.id = id;
@@ -45,9 +40,6 @@ public abstract class RoomElement {
     public void setAvailable(boolean available) {
         this.available = available;
     }
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
     @Override
     public String toString() {
@@ -56,7 +48,6 @@ public abstract class RoomElement {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", available=" + available +
-                ", room=" + room +
                 '}';
     }
 }

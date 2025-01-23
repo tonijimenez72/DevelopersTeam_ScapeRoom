@@ -28,7 +28,6 @@ public class EscapeRoom {
     @Override
     public String toString() {
         return "EscapeRoom{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }
