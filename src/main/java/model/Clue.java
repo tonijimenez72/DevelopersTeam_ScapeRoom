@@ -8,8 +8,8 @@ public class Clue extends RoomElement{
     public Clue() {
     }
 
-    public Clue(String name, double price, Room room, Theme theme) {
-        super(name, price, room);
+    public Clue(String name, double price, Theme theme) {
+        super(name, price);
         this.theme = theme;
     }
 
@@ -23,8 +23,6 @@ public class Clue extends RoomElement{
 
     @Override
     public String toString() {
-        return "Clue{" +
-                "theme=" + theme +
-                '}';
+        return String.format(" * %s [Price: %s] [Theme: %s]\n", super.getName(), super.getPrice(), theme);
     }
 }
