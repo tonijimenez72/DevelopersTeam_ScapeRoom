@@ -40,4 +40,21 @@ public class RoomController {
     public void showAllRooms() {
         roomService.getAllRooms().forEach(System.out::println);
     }
+
+    public void updateRoomAvailability(Room room, boolean available) {
+        try {
+            roomService.updateRoomAvailability(room, available);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error updating room availability: " + e.getMessage());
+        }
+    }
+
+    public void showRoomTotalPrice(Room room) {
+        try {
+            double totalPrice = roomService.calculateRoomTotalPrice(room);
+            System.out.printf("Room: %s [Total price: %.2f]", room.getName(), totalPrice);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error calculating room total price: " + e.getMessage());
+        }
+    }
 }

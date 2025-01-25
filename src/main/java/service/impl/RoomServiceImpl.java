@@ -1,8 +1,9 @@
-package service;
+package service.impl;
 
 import model.Clue;
 import model.Decoration;
 import model.Room;
+import service.RoomService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<Room> getAllRooms() {
-        return new ArrayList<>(rooms); // Return a copy to avoid external modification
+        return new ArrayList<>(rooms);
     }
 
     @Override
@@ -31,11 +32,10 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room or Clue cannot be null.");
         }
         if (!clue.isAvailable()) {
-            throw new IllegalStateException("Clue is not available.");
+            throw new IllegalStateException("[Clue: " + clue.getName() + "] [Status: not available]");
         }
-        room.getClues().add(clue);
-        clue.setAvailable(false);
-        System.out.println("Clue \"" + clue.getName() + "\" added to room \"" + room.getName() + "\".");
+        room.addClueToRoom(clue);
+        System.out.printf("Room %s [New clue added: %s]", room.getName(), clue.getName());
     }
 
     @Override
@@ -44,11 +44,10 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room or Decoration cannot be null.");
         }
         if (!decoration.isAvailable()) {
-            throw new IllegalStateException("Decoration is not available.");
+            throw new IllegalStateException("[Decoration: " + decoration.getName() + "] [Status: not available]");
         }
-        room.getDecorations().add(decoration);
-        decoration.setAvailable(false);
-        System.out.println("Decoration \"" + decoration.getName() + "\" added to room \"" + room.getName() + "\".");
+        room.addDecorationToRoom(decoration);
+        System.out.printf("Room: %s [New decoration added: %s]", room.getName(), decoration.getName());
     }
 
     @Override
@@ -57,6 +56,25 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room cannot be null.");
         }
         room.setAvailable(available);
-        System.out.println("Room \"" + room.getName() + "\" availability updated to: " + available);
+        System.out.println("Room: " + room.getName() + "[status: " + (available ? "available" : "not available") + "]");
+
     }
+
+    @Override
+    public double calculateRoomTotalPrice(Room room) {
+        if (room == null) {
+            throw new IllegalArgumentException("Room cannot be null.");
+        }
+
+        double totalCluePrice = room.getClues().stream()
+                .mapToDouble(Clue::getPrice)
+                .sum();
+
+        double totalDecorationPrice = room.getDecorations().stream()
+                .mapToDouble(Decoration::getPrice)
+                .sum();
+
+        return room.getPrice() + totalCluePrice + totalDecorationPrice;
+    }
+
 }
