@@ -1,8 +1,9 @@
-package service;
+package service.impl;
 
 import model.Clue;
 import model.Decoration;
 import model.Room;
+import service.EscapeRoomService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,4 +12,5 @@ public interface RoomService {
     void addClueToRoom(Room room, Clue clue);
     void addDecorationToRoom(Room room, Decoration decoration);
     void updateRoomAvailability(Room room, boolean available);
+    double calculateRoomTotalPrice(Room room);
 }
