@@ -9,6 +9,8 @@ public class Player implements NotificationObserver {
     private int id;
     private String name;
     private String email;
+    private String surname;
+    private int phone;
     private boolean subscriber;
     private List<Room> playedRooms;
     private List<Room> solvedRooms;
@@ -18,12 +20,24 @@ public class Player implements NotificationObserver {
         this.solvedRooms = new ArrayList<>();
     }
 
-    public Player(String name, String email) {
+    public Player(int id,String name,String surname, String email, int phone) {
+
+        this.id=id;
         this.name = name;
         this.email = email;
+        this.surname=surname;
+        this.phone=phone;
         this.subscriber = false;
         this.playedRooms = new ArrayList<>();
         this.solvedRooms = new ArrayList<>();
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public int getPhone() {
+        return phone;
     }
 
     public int getId() {
@@ -64,6 +78,14 @@ public class Player implements NotificationObserver {
 
     public void setSubscriber(boolean subscriber) {
         this.subscriber = subscriber;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
     }
 
     public void addPlayedRoom(Room room) {

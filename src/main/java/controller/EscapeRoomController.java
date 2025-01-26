@@ -13,9 +13,9 @@ public class EscapeRoomController {
         this.escapeRoomService = escapeRoomService;
     }
 
-    public void createEscapeRoom(String name) {
+    public void createEscapeRoom(String name, int id ) {
         try {
-            escapeRoomService.createEscapeRoom(name);
+            escapeRoomService.createEscapeRoom(name,id);
             System.out.println("Escape Room successfully added.");
         } catch (IllegalArgumentException e) {
             System.out.println("Error adding escape room: " + e.getMessage());

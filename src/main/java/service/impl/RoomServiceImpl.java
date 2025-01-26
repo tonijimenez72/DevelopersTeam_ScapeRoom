@@ -1,5 +1,8 @@
 package service.impl;
 
+import dao.Impl.DaoClueImpl;
+import dao.Impl.DaoDecorationImpl;
+import dao.Impl.DaoRoomImpl;
 import model.Clue;
 import model.Decoration;
 import model.Room;
@@ -12,18 +15,29 @@ public class RoomServiceImpl implements RoomService {
 
     private final List<Room> rooms = new ArrayList<>();
 
+    DaoRoomImpl daoRoom = new DaoRoomImpl();
+    DaoClueImpl daoClue= new DaoClueImpl();
+    DaoDecorationImpl daoDecoration= new DaoDecorationImpl();
+
     @Override
     public void addRoom(Room room) {
         if (room == null) {
             throw new IllegalArgumentException("Room cannot be null.");
         }
         rooms.add(room);
+        daoRoom.addRoom(room);
         System.out.println("Room added: " + room.getName());
+
+
     }
 
     @Override
     public List<Room> getAllRooms() {
-        return new ArrayList<>(rooms);
+
+        List<Room> rooms1 = daoRoom.getAllRooms();
+
+        return rooms1;
+
     }
 
     @Override
@@ -32,10 +46,13 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room or Clue cannot be null.");
         }
         if (!clue.isAvailable()) {
-            throw new IllegalStateException("[Clue: " + clue.getName() + "] [Status: not available]");
+            throw new IllegalStateException("Clue is not available.");
         }
-        room.addClueToRoom(clue);
-        System.out.printf("Room %s [New clue added: %s]", room.getName(), clue.getName());
+        room.getClues().add(clue);
+        clue.setAvailable(false);
+        daoClue.addClueToRoom(clue,room);
+
+        System.out.println("Clue \"" + clue.getName() + "\" added to room \"" + room.getName() + "\".");
     }
 
     @Override
@@ -44,10 +61,14 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room or Decoration cannot be null.");
         }
         if (!decoration.isAvailable()) {
-            throw new IllegalStateException("[Decoration: " + decoration.getName() + "] [Status: not available]");
+            throw new IllegalStateException("Decoration is not available.");
         }
-        room.addDecorationToRoom(decoration);
-        System.out.printf("Room: %s [New decoration added: %s]", room.getName(), decoration.getName());
+        room.getDecorations().add(decoration);
+        decoration.setAvailable(false);
+        daoDecoration.addDecoToRoom(decoration,room);
+
+
+        System.out.println("Decoration \"" + decoration.getName() + "\" added to room \"" + room.getName() + "\".");
     }
 
     @Override
@@ -56,8 +77,9 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room cannot be null.");
         }
         room.setAvailable(available);
-        System.out.println("Room: " + room.getName() + "[status: " + (available ? "available" : "not available") + "]");
+        daoRoom.updateRoomAvailability(room,available);
 
+        System.out.println("Room \"" + room.getName() + "\" availability updated to: " + available);
     }
 
     @Override

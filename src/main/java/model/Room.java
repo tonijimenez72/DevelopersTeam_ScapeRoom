@@ -17,8 +17,10 @@ public class Room {
     private List<Clue> clues;
     private List<Decoration> decorations;
     private List<Player> players;
+    private int escapeRoomId;
 
-    public Room(String name, Theme theme, DifficultyLevel difficultyLevel, double price) {
+    public Room( int id, String name, Theme theme, DifficultyLevel difficultyLevel, double price) {
+        this.id=id;
         this.name = name;
         this.theme = theme;
         this.difficultyLevel = difficultyLevel;
@@ -27,6 +29,10 @@ public class Room {
         this.clues = new ArrayList<>();
         this.decorations = new ArrayList<>();
         this.players = new ArrayList<>();
+    }
+
+    public Room (){
+
     }
 
     public int getId() {
@@ -56,6 +62,14 @@ public class Room {
     }
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public int getEscapeRoomId() {
+        return escapeRoomId;
+    }
+
+    public void setEscapeRoomId(int escapeRoomId) {
+        this.escapeRoomId = escapeRoomId;
     }
 
     public void setId(int id) {

@@ -1,7 +1,7 @@
 package service.impl;
 
+import dao.Impl.DaoPlayerImpl;
 import model.Player;
-import model.Room;
 import service.PlayerService;
 
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     private final List<Player> players = new ArrayList<>();
+    DaoPlayerImpl daoPlayer= new DaoPlayerImpl();
 
     @Override
     public void addPlayer(Player player) {
@@ -17,12 +18,14 @@ public class PlayerServiceImpl implements PlayerService {
             throw new IllegalArgumentException("Player cannot be null.");
         }
         players.add(player);
+        daoPlayer.addPlayer(player);
         System.out.println("Player added: " + player.getName());
     }
 
     @Override
     public List<Player> getAllPlayers() {
-        return new ArrayList<>(players);
+
+        return daoPlayer.getAllPlayers();
     }
 
     @Override
@@ -41,6 +44,8 @@ public class PlayerServiceImpl implements PlayerService {
         if (!players.remove(player)) {
             throw new IllegalArgumentException("Player \"" + player.getName() + "\" does not exist.");
         }
+
+        daoPlayer.deletePlayer(player);
         System.out.println("Player removed: " + player.getName());
     }
 
@@ -51,6 +56,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
         if (!player.isSubscriber()) {
             player.setSubscriber(true);
+            daoPlayer.addSubscriber(player);
             System.out.println("Player subscribed to notifications: " + player.getName());
         } else {
             System.out.println("Player is already subscribed.");
@@ -64,6 +70,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
         if (player.isSubscriber()) {
             player.setSubscriber(false);
+            daoPlayer.deleteSubscriber(player);
             System.out.println("Player unsubscribed from notifications: " + player.getName());
         } else {
             System.out.println("Player is not subscribed.");

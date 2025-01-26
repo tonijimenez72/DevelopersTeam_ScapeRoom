@@ -12,8 +12,9 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(Room room, Player player, double price, LocalDate purchaseDate) {
-        this.room = room;
+    public Ticket(int id,Room room, Player player, double price, LocalDate purchaseDate) {
+
+        this.id=id;        this.room = room;
         this.player = player;
         this.price = price;
         this.purchaseDate = purchaseDate;

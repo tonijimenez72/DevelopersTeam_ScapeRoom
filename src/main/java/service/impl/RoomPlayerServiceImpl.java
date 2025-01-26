@@ -1,5 +1,6 @@
 package service.impl;
 
+import dao.Impl.DaoRoomPlayerImpl;
 import model.Player;
 import model.Room;
 import service.RoomPlayerService;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoomPlayerServiceImpl implements RoomPlayerService {
+
+    DaoRoomPlayerImpl daoRoomPlayer = new DaoRoomPlayerImpl();
 
     @Override
     public void addPlayerToRoom(Player player, Room room) {
@@ -19,6 +22,7 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
         }
         player.addPlayedRoom(room);
         room.addPlayerToRoom(player);
+        daoRoomPlayer.addPlayerRoomRelation(player,room);
         room.setAvailable(false);
         System.out.printf("Room: %s [New player: %s]", room.getName(), player.getName());
     }

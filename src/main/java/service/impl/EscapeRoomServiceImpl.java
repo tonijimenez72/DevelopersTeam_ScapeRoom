@@ -1,10 +1,12 @@
 package service.impl;
 
+import dao.Impl.DaoEscapeRoomImpl;
 import model.Clue;
 import model.Decoration;
+import model.EscapeRoom;
 import model.Room;
 import service.EscapeRoomService;
-
+import dao.Impl.DaoRoomImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -15,15 +17,19 @@ public class EscapeRoomServiceImpl implements EscapeRoomService {
     private List<Room> rooms;
     private List<Clue> clues;
     private List<Decoration> decorations;
+    private final DaoEscapeRoomImpl daoEscapeRoom;
+    private final DaoRoomImpl daoRoom;
 
     public EscapeRoomServiceImpl() {
         this.rooms = new ArrayList<>();
         this.clues = new ArrayList<>();
         this.decorations = new ArrayList<>();
+        this.daoEscapeRoom = new DaoEscapeRoomImpl();
+        this.daoRoom= new DaoRoomImpl();
     }
 
     @Override
-    public void createEscapeRoom(String name) {
+    public void createEscapeRoom(String name, int id) {
         try {
             if (escapeRoomName != null) {
                 throw new IllegalStateException("An Escape Room already exists: " + escapeRoomName);
@@ -33,6 +39,11 @@ public class EscapeRoomServiceImpl implements EscapeRoomService {
             }
             this.escapeRoomName = name;
             System.out.println("New Escape Room created: " + name);
+
+            EscapeRoom escapeRoom = new EscapeRoom(id,name);
+
+            daoEscapeRoom.addEscapeRoom(escapeRoom);
+
         } catch (IllegalStateException | IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -67,17 +78,28 @@ public class EscapeRoomServiceImpl implements EscapeRoomService {
                 + decorations.stream().mapToDouble(Decoration::getPrice).sum();
     }
 
-    public void addRoom(Room room) {
+
+
+
+    public void addRoomToScapeRoom(Room room, int escapeRoomid) {
         if (room == null) {
             throw new IllegalArgumentException("Room cannot be null.");
         }
         rooms.add(room);
+
+        daoRoom.addRoomToEscapeRoom(room,escapeRoomid);
+
         System.out.println("Room added: " + room.getName());
     }
 
-    public List<Room> getRooms() {
-        return new ArrayList<>(rooms);
+
+    public List<Room> getRooms(int id_scape_room) {
+
+
+        return daoRoom.getAllRoomOfTheScapeRoom(id_scape_room);
+
     }
+
 
     public void addClue(Clue clue) {
         if (clue == null) {

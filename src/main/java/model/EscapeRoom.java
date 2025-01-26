@@ -7,8 +7,9 @@ public class EscapeRoom {
     public EscapeRoom() {
     }
 
-    public EscapeRoom(String name) {
+    public EscapeRoom( int id, String name) {
         this.name = name;
+        this.id= id;
     }
 
     public int getId() {

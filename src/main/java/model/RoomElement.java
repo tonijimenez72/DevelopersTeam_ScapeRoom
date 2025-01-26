@@ -1,7 +1,7 @@
 package model;
 
 public abstract class RoomElement {
-    private String id;
+    private int id;
     private String name;
     private double price;
     private boolean available;
@@ -9,13 +9,14 @@ public abstract class RoomElement {
     public RoomElement() {
     }
 
-    public RoomElement(String name, double price) {
+    public RoomElement(int id,String name, double price) {
         this.name = name;
         this.price = price;
         this.available = true;
+        this.id=id;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
     public String getName() {
@@ -28,7 +29,7 @@ public abstract class RoomElement {
         return available;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     public void setName(String name) {

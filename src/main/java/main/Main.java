@@ -29,26 +29,26 @@ public class Main {
         NotificationController notificationController = new NotificationController(notificationService);
 
         System.out.println("Manage Escape Room");
-        escapeRoomController.createEscapeRoom("Escape from IT Academy");
+        escapeRoomController.createEscapeRoom("Escape from IT Academy",1);
 
         System.out.println("\nManage clues");
-        Clue clue1 = new Clue("The last letter received", 20, Theme.MISTERY);
-        Clue clue2 = new Clue("The portrait", 20, Theme.MISTERY);
+        Clue clue1 = new Clue(1,"The last letter received", 20, Theme.MISTERY);
+        Clue clue2 = new Clue(2,"The portrait", 20, Theme.MISTERY);
 
         clueController.addClue(clue1);
         clueController.addClue(clue2);
 
 
         System.out.println("\nManage Decorations");
-        Decoration deco1 = new Decoration("Red lamp", 10, "lamp");
-        Decoration deco2 = new Decoration("Blue lamp", 10, "lamp");
+        Decoration deco1 = new Decoration(1,"Red lamp", 10, "lamp");
+        Decoration deco2 = new Decoration(2,"Blue lamp", 10, "lamp");
 
         decorationController.addDecoration(deco1);
         decorationController.addDecoration(deco2);
 
         System.out.println("\nManage Rooms");
-        Room room1 = new Room("The Old Library of Arkham", Theme.MISTERY, DifficultyLevel.MEDIUM, 50.0);
-        Room room2 = new Room("The New Library of Arkham", Theme.MISTERY, DifficultyLevel.MEDIUM, 50.0);
+        Room room1 = new Room(1,"The Old Library of Arkham", Theme.MISTERY, DifficultyLevel.MEDIUM, 50.0);
+        Room room2 = new Room(1,"The New Library of Arkham", Theme.MISTERY, DifficultyLevel.MEDIUM, 50.0);
 
         roomController.addRoom(room1);
         roomController.addRoom(room2);
@@ -60,8 +60,8 @@ public class Main {
         roomController.addDecorationToRoom(room1, deco2);
 
         System.out.println("\nManage players");
-        Player player1 = new Player("Player One", "readyplayer1@itacademy.cat");
-        Player player2 = new Player("Player Two", "readyplayer2@itacademy.cat");
+        Player player1 = new Player(1,"Player One", "Martinez", "readyplayer1@itacademy.cat",7764646);
+        Player player2 = new Player(2,"Player Two", "Alvarez","readyplayer2@itacademy.cat",94878383);
 
         playerController.addPlayer(player1);
         playerController.addPlayer(player2);
@@ -102,6 +102,8 @@ public class Main {
         roomPlayerController.showRoomsSolvedByPlayer(player1);
 
         roomPlayerController.showPlayersByRoom(room1);
+
+
 
 
 
