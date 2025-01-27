@@ -4,12 +4,12 @@ import model.Player;
 import java.util.List;
 
 public interface PlayerService {
-    void addPlayer(Player player);
+    void createPlayer(Player player);
+    void addSubscription(int id);
+    Player getPlayerById(int id);
     List<Player> getAllPlayers();
-    Player getPlayerByEmail(String email);
-    void removePlayer(Player player);
-    void addSubscription(Player player);
-    void deleteSubscription(Player player);
-    List<Player> getSubscribers();
-    void showAllSubscribers();
+    List<Player> getAllSubscribers();
+    void deleteSubscription(int id);
+    void deletePlayer(int id);
+    void sendNotification(String message);
 }

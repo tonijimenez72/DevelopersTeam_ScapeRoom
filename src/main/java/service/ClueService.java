@@ -5,8 +5,9 @@ import model.Clue;
 import java.util.List;
 
 public interface ClueService {
-    void addClue(Clue clue);
+    void createClue(Clue clue);
     List<Clue> getAllClues();
-    void updateClueAvailability(Clue clue, boolean available);
-    void removeClue(Clue clue);
+    Clue getClueById(int id);
+    void updateClueStatus(int id, boolean available);
+    void removeClue(int id);
 }

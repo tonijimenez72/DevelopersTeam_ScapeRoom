@@ -14,63 +14,61 @@ public class RoomPlayerController {
         this.roomPlayerService = roomPlayerService;
     }
 
-    public void addPlayerToRoom(Player player, Room room) {
+    public void addPlayerToRoom(int playerId, int roomId) {
         try {
-            roomPlayerService.addPlayerToRoom(player, room);
-            System.out.printf("Player '%s' added to room '%s'.%n", player.getName(), room.getName());
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            roomPlayerService.addPlayerToRoom(playerId, roomId);
+        } catch (Exception e) {
             System.out.println("Error adding player to room: " + e.getMessage());
         }
     }
 
-    public void endRoomSession(Player player, Room room, boolean isSolved) {
+    public void endRoomSession(int playerId, int roomId, boolean isSolved) {
         try {
-            roomPlayerService.endRoomSession(player, room, isSolved);
-            System.out.printf("Session ended: [Room %s] [Player: %s]%n", room.getName(), player.getName());
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            System.out.println("Error ending session: " + e.getMessage());
+            roomPlayerService.endRoomSession(playerId, roomId, isSolved);
+        } catch (Exception e) {
+            System.out.println("Error ending room session: " + e.getMessage());
         }
     }
 
-    public void showPlayersByRoom(Room room) {
+    public void showPlayersByRoom(int roomId) {
         try {
-            List<Player> players = roomPlayerService.getPlayersByRoom(room);
+            List<Player> players = roomPlayerService.getPlayersByRoom(roomId);
             if (players.isEmpty()) {
-                System.out.println("No players have played the room: " + room.getName());
+                System.out.println("Room available.");
             } else {
-                System.out.printf("Room:%n * %s%nPlayed by:%n", room.getName());
-                players.forEach(player -> System.out.println(" * " + player.getName()));
+                System.out.printf("Session in progress:%n Room ID: %s%n Players: ", roomId);
+                players.forEach(player -> System.out.printf(" Player ID: %s | Name: %s", player.getId(), player.getName()));
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error retrieving players for room: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error retrieving players by room: " + e.getMessage());
         }
     }
 
-    public void showRoomsPlayedByPlayer(Player player) {
+    public void showRoomsPlayedByPlayer(int playerId) {
         try {
-            List<Room> rooms = roomPlayerService.getRoomsPlayedByPlayer(player);
+            List<Room> rooms = roomPlayerService.getRoomsPlayedByPlayer(playerId);
             if (rooms.isEmpty()) {
-                System.out.println("Player " + player.getName() + " has not played any rooms.");
+                System.out.printf("Player with ID '%d' has not played any rooms.%n", playerId);
             } else {
-                System.out.printf("Player:%n * %s%nRooms played:%n", player.getName());
-                rooms.forEach(room -> System.out.println(" * " + room.getName()));
+                System.out.printf("Player ID:%s:%n", playerId);
+                rooms.forEach(room -> System.out.printf("Rooms played:%n ID: %d | Name: %s%n", room.getId(), room.getName()));
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error retrieving rooms for player: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error retrieving rooms played by player: " + e.getMessage());
         }
     }
 
-    public void showRoomsSolvedByPlayer(Player player) {
+    public void showRoomsSolvedByPlayer(int playerId) {
         try {
-            List<Room> rooms = roomPlayerService.getRoomsSolvedByPlayer(player);
+            List<Room> rooms = roomPlayerService.getRoomsSolvedByPlayer(playerId);
             if (rooms.isEmpty()) {
-                System.out.println("Player " + player.getName() + " has not solved any rooms.");
+                System.out.println("Player has not solved any room.");
             } else {
-                System.out.printf("Player:%n * %s%nRooms solved:%n", player.getName());
-                rooms.forEach(room -> System.out.println(" * " + room.getName()));
+                System.out.printf("Player ID: %s:", playerId);
+                rooms.forEach(room -> System.out.printf("%nRooms solved:%n ID: %d | Name: %s%n", room.getId(), room.getName()));
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error retrieving solved rooms for player: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error retrieving rooms solved by player: " + e.getMessage());
         }
     }
 }

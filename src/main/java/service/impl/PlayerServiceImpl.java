@@ -1,23 +1,35 @@
 package service.impl;
 
 import model.Player;
-import model.Room;
 import service.PlayerService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerServiceImpl implements PlayerService {
 
     private final List<Player> players = new ArrayList<>();
 
     @Override
-    public void addPlayer(Player player) {
+    public void createPlayer(Player player) {
         if (player == null) {
             throw new IllegalArgumentException("Player cannot be null.");
         }
+        if (player.getName() == null || player.getName().isBlank() || player.getEmail() == null || player.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Player name and email cannot be null or blank.");
+        }
+
         players.add(player);
-        System.out.println("Player added: " + player.getName());
+        System.out.println("Player created.");
+    }
+
+    @Override
+    public Player getPlayerById(int id) {
+        return players.stream()
+                .filter(player -> player.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Player not found."));
     }
 
     @Override
@@ -26,69 +38,54 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player getPlayerByEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank.");
-        }
-        return players.stream()
-                .filter(player -> player.getEmail().equalsIgnoreCase(email))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Player with email \"" + email + "\" not found."));
-    }
-
-    @Override
-    public void removePlayer(Player player) {
-        if (!players.remove(player)) {
-            throw new IllegalArgumentException("Player \"" + player.getName() + "\" does not exist.");
-        }
-        System.out.println("Player removed: " + player.getName());
-    }
-
-    @Override
-    public void addSubscription(Player player) {
-        if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null.");
-        }
+    public void addSubscription(int id) {
+        Player player = getPlayerById(id);
         if (!player.isSubscriber()) {
             player.setSubscriber(true);
-            System.out.println("Player subscribed to notifications: " + player.getName());
+            System.out.println("Player subscribed to notifications.");
         } else {
-            System.out.println("Player is already subscribed.");
+            System.out.println("Player is already subscribed");
         }
     }
 
     @Override
-    public void deleteSubscription(Player player) {
-        if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null.");
-        }
+    public void deleteSubscription(int id) {
+        Player player = getPlayerById(id);
         if (player.isSubscriber()) {
             player.setSubscriber(false);
-            System.out.println("Player unsubscribed from notifications: " + player.getName());
+            System.out.println("Player unsubscribed from notifications.");
         } else {
             System.out.println("Player is not subscribed.");
         }
     }
 
-
     @Override
-    public List<Player> getSubscribers() {
+    public List<Player> getAllSubscribers() {
         return players.stream()
                 .filter(Player::isSubscriber)
-                .toList();
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public void deletePlayer(int id) {
+        Player player = getPlayerById(id);
+        players.remove(player);
+        System.out.println("Player removed.");
+    }
 
     @Override
-    public void showAllSubscribers() {
-        List<Player> subscribers = players.stream()
-                .filter(Player::isSubscriber)
-                .toList();
-        if (subscribers.isEmpty()) {
-            System.out.println("No subscribers found.");
-        } else {
-            System.out.println("List of Subscribers:");
-            subscribers.forEach(subscriber -> System.out.println(" - " + subscriber.getName() + " (" + subscriber.getEmail() + ")"));
+    public void sendNotification(String message) {
+        if (message == null || message.isBlank()) {
+            throw new IllegalArgumentException("Notification message cannot be null or blank.");
         }
+
+        List<Player> subscribers = getAllSubscribers();
+        if (subscribers.isEmpty()) {
+            System.out.println("No subscribers to notify.");
+            return;
+        }
+
+        System.out.println("Sending notifications to subscribers:");
+        subscribers.forEach(player -> player.update(message));
     }
 }

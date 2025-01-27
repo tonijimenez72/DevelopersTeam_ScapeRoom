@@ -1,13 +1,11 @@
 package model;
 
 public abstract class RoomElement {
-    private String id;
     private String name;
     private double price;
     private boolean available;
 
-    public RoomElement() {
-    }
+    public RoomElement() {}
 
     public RoomElement(String name, double price) {
         this.name = name;
@@ -15,9 +13,6 @@ public abstract class RoomElement {
         this.available = true;
     }
 
-    public String getId() {
-        return id;
-    }
     public String getName() {
         return name;
     }
@@ -28,9 +23,6 @@ public abstract class RoomElement {
         return available;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
     public void setName(String name) {
         this.name = name;
     }
@@ -39,15 +31,5 @@ public abstract class RoomElement {
     }
     public void setAvailable(boolean available) {
         this.available = available;
-    }
-
-    @Override
-    public String toString() {
-        return "RoomElement{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", available=" + available +
-                '}';
     }
 }

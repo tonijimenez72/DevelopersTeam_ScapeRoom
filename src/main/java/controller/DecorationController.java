@@ -23,23 +23,34 @@ public class DecorationController {
     public void showAllDecorations() {
         List<Decoration> decorations = decorationService.getAllDecorations();
         if (decorations.isEmpty()) {
-            System.out.println("No decorations available.");
+            System.out.println("None.");
         } else {
             decorations.forEach(System.out::println);
         }
     }
 
-    public void updateDecorationAvailability(Decoration decoration, boolean available) {
+    public Decoration getDecorationById(int id) {
         try {
-            decorationService.updateDecorationAvailability(decoration, available);
+            return decorationService.getDecorationById(id);
         } catch (IllegalArgumentException e) {
-            System.out.println("Error updating decoration availability: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+            return null;
         }
     }
 
-    public void removeDecoration(Decoration decoration) {
+    public void updateDecorationStatus(int id, boolean available) {
         try {
-            decorationService.removeDecoration(decoration);
+            decorationService.updateDecorationStatus(id, available);
+            System.out.println("Updated status for decoaration.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error updating decoration status: " + e.getMessage());
+        }
+    }
+
+    public void removeDecoration(int id) {
+        try {
+            decorationService.removeDecoration(id);
+            System.out.println("Decoration removed.");
         } catch (IllegalArgumentException e) {
             System.out.println("Error removing decoration: " + e.getMessage());
         }

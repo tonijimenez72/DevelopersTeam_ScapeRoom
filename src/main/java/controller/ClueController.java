@@ -14,7 +14,8 @@ public class ClueController {
 
     public void addClue(Clue clue) {
         try {
-            clueService.addClue(clue);
+            clueService.createClue(clue);
+            System.out.println("New clue creaated: " + clue);
         } catch (IllegalArgumentException e) {
             System.out.println("Error adding clue: " + e.getMessage());
         }
@@ -23,23 +24,34 @@ public class ClueController {
     public void showAllClues() {
         List<Clue> clues = clueService.getAllClues();
         if (clues.isEmpty()) {
-            System.out.println("No clues available.");
+            System.out.println("None.");
         } else {
             clues.forEach(System.out::println);
         }
     }
 
-    public void updateClueAvailability(Clue clue, boolean available) {
+    public Clue getClueById(int id) {
         try {
-            clueService.updateClueAvailability(clue, available);
+            return clueService.getClueById(id);
         } catch (IllegalArgumentException e) {
-            System.out.println("Error updating clue availability: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+            return null;
         }
     }
 
-    public void removeClue(Clue clue) {
+    public void updateClueStatus(int id, boolean available) {
         try {
-            clueService.removeClue(clue);
+            clueService.updateClueStatus(id, available);
+            System.out.println("Updated status for clue.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error updating clue status: " + e.getMessage());
+        }
+    }
+
+    public void removeClue(int id) {
+        try {
+            clueService.removeClue(id);
+            System.out.println("Clue removed.");
         } catch (IllegalArgumentException e) {
             System.out.println("Error removing clue: " + e.getMessage());
         }
