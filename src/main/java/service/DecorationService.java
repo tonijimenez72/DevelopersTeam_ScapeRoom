@@ -7,6 +7,7 @@ import java.util.List;
 public interface DecorationService {
     void addDecoration(Decoration decoration);
     List<Decoration> getAllDecorations();
-    void updateDecorationAvailability(Decoration decoration, boolean available);
-    void removeDecoration(Decoration decoration);
+    Decoration getDecorationById(int id);
+    void updateDecorationStatus(int id, boolean available);
+    void removeDecoration(int id);
 }

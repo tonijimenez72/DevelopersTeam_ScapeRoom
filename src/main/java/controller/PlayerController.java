@@ -13,71 +13,71 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    public void addPlayer(Player player) {
+    public void createPlayer(Player player) {
         try {
-            playerService.addPlayer(player);
-            System.out.println("Player successfully added: " + player.getName());
+            playerService.createPlayer(player);
         } catch (IllegalArgumentException e) {
-            System.out.println("Error adding player: " + e.getMessage());
+            System.out.println("Error creating player: " + e.getMessage());
+        }
+    }
+
+    public Player getPlayerById(int id) {
+        try {
+            return playerService.getPlayerById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
         }
     }
 
     public void showAllPlayers() {
         List<Player> players = playerService.getAllPlayers();
         if (players.isEmpty()) {
-            System.out.println("No players registered.");
+            System.out.println("No players available.");
         } else {
             players.forEach(System.out::println);
         }
     }
 
-    public void removePlayer(Player player) {
+    public void addSubscription(int playerId) {
         try {
-            playerService.removePlayer(player);
-            System.out.println("Player removed successfully: " + player.getName());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error removing player: " + e.getMessage());
-        }
-    }
-
-    public Player getPlayerByEmail(String email) {
-        try {
-            return playerService.getPlayerByEmail(email);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error retrieving player: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public void subscribeToNotifications(Player player) {
-        try {
-            if (player.isSubscriber()) {
-                System.out.println("Player is already subscribed to notifications: " + player.getName());
-                return;
-            }
-            playerService.addSubscription(player);
-            System.out.println("Player subscribed to notifications: " + player.getName());
+            playerService.addSubscription(playerId);
         } catch (IllegalArgumentException e) {
             System.out.println("Error subscribing player: " + e.getMessage());
         }
     }
 
-    public void unsubscribeFromNotifications(Player player) {
+    public void deleteSubscription(int playerId) {
         try {
-            playerService.deleteSubscription(player);
-            System.out.println("Player unsubscribed from notifications: " + player.getName());
+            playerService.deleteSubscription(playerId);
         } catch (IllegalArgumentException e) {
             System.out.println("Error unsubscribing player: " + e.getMessage());
         }
     }
 
     public void showAllSubscribers() {
-        List<Player> subscribers = playerService.getSubscribers();
+        List<Player> subscribers = playerService.getAllSubscribers();
         if (subscribers.isEmpty()) {
-            System.out.println("No players subscribed to notifications.");
+            System.out.println("No subscribers found.");
         } else {
-            System.out.println("List of subscribers:");
-            subscribers.forEach(System.out::println);
+            System.out.println("Subscribers:");
+            subscribers.forEach(subscriber -> System.out.println(" Name: " + subscriber.getName() + " | Email: " + subscriber.getEmail()));
+        }
+    }
+
+    public void deletePlayer(int playerId) {
+        try {
+            playerService.deletePlayer(playerId);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error deleting player: " + e.getMessage());
+        }
+    }
+
+    public void sendNotification(String message) {
+        try {
+            playerService.sendNotification(message);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error sending notification: " + e.getMessage());
         }
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 public class EscapeRoom {
+    private static final String SCAPE_ROOM_NAME = "IT Scape Room";
     private int id;
     private String name;
 
@@ -8,7 +9,7 @@ public class EscapeRoom {
     }
 
     public EscapeRoom(String name) {
-        this.name = name;
+        this.name = SCAPE_ROOM_NAME;
     }
 
     public int getId() {

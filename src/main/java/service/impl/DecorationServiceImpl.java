@@ -1,6 +1,8 @@
 package service.impl;
 
+import model.Clue;
 import model.Decoration;
+import model.Room;
 import service.DecorationService;
 
 import java.util.ArrayList;
@@ -15,23 +17,34 @@ public class DecorationServiceImpl implements DecorationService {
             throw new IllegalArgumentException("Decoration cannot be null.");
         }
         decorations.add(decoration);
-        System.out.println("Decoration added: " + decoration.getName());
     }
-
     @Override
     public List<Decoration> getAllDecorations() {
         return new ArrayList<>(decorations);
     }
 
     @Override
-    public void updateDecorationAvailability(Decoration decoration, boolean available) {
+    public Decoration getDecorationById(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Clue ID must be greater than 0.");
+        }
+        return decorations.stream()
+                .filter(decoration -> decoration.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Decoration not found for ID: " + id));
+    }
+
+
+    @Override
+    public void updateDecorationStatus(int id, boolean available) {
+        Decoration decoration = getDecorationById(id);
         decoration.setAvailable(available);
-        System.out.println("\nDecoration: " + decoration.getName() + "[New status: " + (available ? "available]" : "not available]"));
+        System.out.printf("Decoration status updated to: %s%n", available ? "available" : "not available");
     }
 
     @Override
-    public void removeDecoration(Decoration decoration) {
+    public void removeDecoration(int id) {
+        Decoration decoration = getDecorationById(id);
         decorations.remove(decoration);
-        System.out.println("Decoration removed: " + decoration.getName());
     }
 }

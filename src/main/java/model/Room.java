@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Room {
+    private static int counter = 1;
     private int id;
     private String name;
     private Theme theme;
@@ -18,7 +19,10 @@ public class Room {
     private List<Decoration> decorations;
     private List<Player> players;
 
+    public Room() {}
+
     public Room(String name, Theme theme, DifficultyLevel difficultyLevel, double price) {
+        this.id = counter++;
         this.name = name;
         this.theme = theme;
         this.difficultyLevel = difficultyLevel;
@@ -32,7 +36,6 @@ public class Room {
     public int getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
@@ -86,7 +89,6 @@ public class Room {
         this.players = players;
     }
 
-
     public void addClueToRoom(Clue clue) {
         if (clue == null) {
             throw new IllegalArgumentException("Clue cannot be null.");
@@ -110,22 +112,18 @@ public class Room {
         }
     }
 
+    public double getTotalPrice() {
+        return price
+                + clues.stream().mapToDouble(Clue::getPrice).sum()
+                + decorations.stream().mapToDouble(Decoration::getPrice).sum();
+    }
+
     @Override
     public String toString() {
-        return String.format("Room:\n * %s [Price: %.2f] [Theme: %s] [Difficulty: %s] [Available: %s]", name, price, theme, difficultyLevel, available)
-                + "\nClues:\n" + formattedStringForClues()
-                + "\nDecorations:\n" + formatedStringForDecorations();
-    }
-
-    private String formattedStringForClues() {
-        return clues.isEmpty() ? "None" : clues.stream()
-                .map(clue -> String.format(" * %s [Price: %.2f] [Theme: %s]", clue.getName(), clue.getPrice(), clue.getTheme()))
-                .collect(Collectors.joining("\n"));
-    }
-
-    private String formatedStringForDecorations() {
-        return decorations.isEmpty() ? "None" : decorations.stream()
-                .map(decoration -> String.format(" * %s [Price: %.2f] [Material: %s]", decoration.getName(), decoration.getPrice(), decoration.getMaterial()))
-                .collect(Collectors.joining("\n"));
+        return String.format(
+                "Room:\n ID: %s | Name: %s | Price: %.2f | Theme: %s | Difficulty: %s | Available: %s", id, name, price, theme, difficultyLevel, available)
+                + "\nClues:\n" + (clues.isEmpty() ? "None" : clues.stream().map(Clue::toString).collect(Collectors.joining("\n")))
+                + "\nDecorations:\n" + (decorations.isEmpty() ? "None" : decorations.stream().map(Decoration::toString).collect(Collectors.joining("\n")))
+                + String.format("\nTotal Price: %.2f", getTotalPrice());
     }
 }
