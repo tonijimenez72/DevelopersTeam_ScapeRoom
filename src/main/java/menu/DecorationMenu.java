@@ -18,8 +18,9 @@ public class DecorationMenu {
                 1. Create decoration
                 2. Show decoration
                 3. Show all decorations
-                4. Update decoration status
-                5. Delete decoration
+                4. Show all available decorations
+                5. Update decoration status
+                6. Delete decoration
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -51,8 +52,9 @@ public class DecorationMenu {
                 case 1 -> createDecoration(scanner);
                 case 2 -> readDecoration(scanner);
                 case 3 -> showAllDecorations();
-                case 4 -> updateDecorationStatus(scanner);
-                case 5 -> deleteDecoration(scanner);
+                case 4 -> showAllAvailableDecorations();
+                case 5 -> updateDecorationStatus(scanner);
+                case 6 -> deleteDecoration(scanner);
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
@@ -93,6 +95,10 @@ public class DecorationMenu {
 
     private void showAllDecorations() {
         decorationController.showAllDecorations();
+    }
+
+    private void showAllAvailableDecorations() {
+        decorationController.showAllAvailableDecorations();
     }
 
     private void updateDecorationStatus(Scanner scanner) {

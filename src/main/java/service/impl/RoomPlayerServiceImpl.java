@@ -34,8 +34,6 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
         room.addPlayerToRoom(player);
         room.setAvailable(false);
         System.out.printf("Room: %s | New player: %s%n", room.getName(), player.getName());
-
-        printTicket( playerId, roomId);
     }
 
     @Override

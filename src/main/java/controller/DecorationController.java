@@ -1,5 +1,6 @@
 package controller;
 
+import model.Clue;
 import model.Decoration;
 import service.DecorationService;
 
@@ -28,6 +29,18 @@ public class DecorationController {
             decorations.forEach(System.out::println);
         }
     }
+
+    public void showAllAvailableDecorations() {
+        List<Decoration> decorations = decorationService.getAvailableDecorations();
+        int countAvailables = decorations.size();
+        if (decorations.isEmpty()) {
+            System.out.println("Available decorations: None.");
+        } else {
+            System.out.printf("Available decorations: %s%n", countAvailables);
+            decorations.forEach(System.out::println);
+        }
+    }
+
 
     public Decoration getDecorationById(int id) {
         try {

@@ -6,6 +6,7 @@ import service.ClueService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClueServiceImpl implements ClueService {
     private final List<Clue> clues = new ArrayList<>();
@@ -23,7 +24,12 @@ public class ClueServiceImpl implements ClueService {
         return new ArrayList<>(clues);
     }
 
-
+    @Override
+    public List<Clue> getAvailableClues() {
+        return clues.stream()
+                .filter(Clue::isAvailable)
+                .collect(Collectors.toList());
+    }
 
 
     @Override

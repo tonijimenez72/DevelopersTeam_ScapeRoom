@@ -42,6 +42,7 @@ public class RoomServiceImpl implements RoomService {
 
         room.addClueToRoom(clue);
         clue.setAvailable(false);
+
     }
 
     @Override
