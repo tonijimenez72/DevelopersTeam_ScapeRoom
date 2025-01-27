@@ -7,6 +7,9 @@ public class InputValidation {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+
     public static int validateIntInput(String prompt) {
         int input = 0;
         boolean valid = false;
@@ -45,20 +48,25 @@ public class InputValidation {
     public static String validateEmailInput(String prompt) {
         String input = "";
         boolean valid = false;
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern emailPattern = Pattern.compile(emailRegex);
 
         while (!valid) {
             System.out.print(prompt);
             input = scanner.nextLine().trim();
 
-            if (emailPattern.matcher(input).matches()) {
+            if (validateEmail(input)) { // Reuse the static validation method
                 valid = true;
             } else {
                 System.out.println("Invalid email format. Please enter a valid email.");
             }
         }
         return input;
+    }
+
+    public static boolean validateEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+        return EMAIL_PATTERN.matcher(email).matches();
     }
 
     public static double validatePriceInput(String prompt) {
