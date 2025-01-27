@@ -19,8 +19,9 @@ public class ClueMenu {
                 1. Create clue
                 2. Show clue
                 3. Show all clues
-                4. Update clue status
-                5. Delete clue
+                4. Show all available clues
+                5. Update clue status
+                6. Delete clue
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -52,8 +53,9 @@ public class ClueMenu {
                 case 1 -> createClue(scanner);
                 case 2 -> readClue(scanner);
                 case 3 -> readAllClues();
-                case 4 -> updateClueStatus(scanner);
-                case 5 -> deleteClue(scanner);
+                case 4 -> readAllAvailableClues();
+                case 5 -> updateClueStatus(scanner);
+                case 6 -> deleteClue(scanner);
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
@@ -101,6 +103,10 @@ public class ClueMenu {
 
     private void readAllClues() {
         clueController.showAllClues();
+    }
+
+    private void readAllAvailableClues() {
+        clueController.showAllAvailableClues();
     }
 
     private void updateClueStatus(Scanner scanner) {

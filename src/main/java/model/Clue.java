@@ -6,6 +6,7 @@ public class Clue extends RoomElement {
     private static int counter = 1;
     private int id;
     private Theme theme;
+    private int roomId;
 
     public Clue() {}
 
@@ -13,6 +14,7 @@ public class Clue extends RoomElement {
         super(name, price);
         this.id = counter++;
         this.theme = theme;
+        this.roomId = roomId;
     }
 
     public int getId() {
@@ -21,12 +23,18 @@ public class Clue extends RoomElement {
     public Theme getTheme() {
         return theme;
     }
+    public int getRoomId() {
+        return roomId;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
     public void setTheme(Theme theme) {
         this.theme = theme;
+    }
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     @Override

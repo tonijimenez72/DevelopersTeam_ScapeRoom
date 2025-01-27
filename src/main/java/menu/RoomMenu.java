@@ -22,10 +22,11 @@ public class RoomMenu {
                 3. Add decoration to room
                 4. Show room total price
                 5. Show all rooms
-                6. Update room availability
-                7. Remove clue from room
-                8. Remove decoration from room
-                9. Delete room
+                6. Show all available rooms
+                7. Update room availability
+                8. Remove clue from room
+                9. Remove decoration from room
+                10. Delete room
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -59,10 +60,11 @@ public class RoomMenu {
                 case 3 -> addDecorationToRoom(scanner);
                 case 4 -> showRoomTotalPrice(scanner);
                 case 5 -> showAllRooms();
-                case 6 -> updateRoomStatus(scanner);
-                case 7 -> removeClueFromRoom(scanner);
-                case 8 -> removeDecorationFromRoom(scanner);
-                case 9 -> deleteRoom(scanner);
+                case 6 -> showAllAvailableRooms();
+                case 7 -> updateRoomStatus(scanner);
+                case 8 -> removeClueFromRoom(scanner);
+                case 9 -> removeDecorationFromRoom(scanner);
+                case 10 -> deleteRoom(scanner);
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }

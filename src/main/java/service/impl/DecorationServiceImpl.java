@@ -7,6 +7,7 @@ import service.DecorationService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DecorationServiceImpl implements DecorationService {
     private final List<Decoration> decorations = new ArrayList<>();
@@ -21,6 +22,13 @@ public class DecorationServiceImpl implements DecorationService {
     @Override
     public List<Decoration> getAllDecorations() {
         return new ArrayList<>(decorations);
+    }
+
+    @Override
+    public List<Decoration> getAvailableDecorations() {
+        return decorations.stream()
+                .filter(Decoration::isAvailable)
+                .collect(Collectors.toList());
     }
 
     @Override

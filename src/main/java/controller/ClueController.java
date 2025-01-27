@@ -1,6 +1,7 @@
 package controller;
 
 import model.Clue;
+import model.Room;
 import service.ClueService;
 
 import java.util.List;
@@ -26,6 +27,17 @@ public class ClueController {
         if (clues.isEmpty()) {
             System.out.println("None.");
         } else {
+            clues.forEach(System.out::println);
+        }
+    }
+
+    public void showAllAvailableClues() {
+        List<Clue> clues = clueService.getAvailableClues();
+        int countAvailables = clues.size();
+        if (clues.isEmpty()) {
+            System.out.println("Available clues: None.");
+        } else {
+            System.out.printf("Available clues: %s%n", countAvailables);
             clues.forEach(System.out::println);
         }
     }

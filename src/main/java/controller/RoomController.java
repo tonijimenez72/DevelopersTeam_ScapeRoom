@@ -62,10 +62,11 @@ public class RoomController {
 
     public void showAllAvailableRooms() {
         List<Room> rooms = roomService.getAvailableRooms();
+        int countAvailables = rooms.size();
         if (rooms.isEmpty()) {
             System.out.println("Available rooms: None.");
         } else {
-            System.out.println("Available rooms:");
+            System.out.printf("Available rooms: %s", countAvailables);
             rooms.forEach(System.out::println);
         }
     }
