@@ -11,6 +11,6 @@ public interface DaoRoom {
     void updateRoom(Room room);
     void deleteRoom(int id);
     void addRoomToEscapeRoom(Room room, int escapeRoomId);
-    void updateRoomAvailability(Room room, boolean isAvailable);
+    void updateRoomAvailability(int idRoom, boolean isAvailable);
 
 }

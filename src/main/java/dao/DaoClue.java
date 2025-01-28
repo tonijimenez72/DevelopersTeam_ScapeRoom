@@ -13,7 +13,7 @@ public interface DaoClue {
 
     void updateClue(Clue clue);
 
-    void deleteClue(Clue clue);
+    void deleteClue(int idClue);
 
-    void addClueToRoom(Clue clue, Room room);
+    void addClueToRoom(int idClue, int idRoom);
 }

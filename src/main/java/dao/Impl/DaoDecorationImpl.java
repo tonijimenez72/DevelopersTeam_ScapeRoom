@@ -31,14 +31,14 @@ public class DaoDecorationImpl implements DaoDecoration {
         }
     }
 
-    public void addDecoToRoom(Decoration decoration, Room room) {
+    public void addDecoToRoom(int idDecoration, int idRoom) {
         String query = "UPDATE decorations SET roomId = ?, available = ? WHERE id = ? AND available = 1";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, room.getId());
+            preparedStatement.setInt(1, idRoom);
             preparedStatement.setBoolean(2,false);
-            preparedStatement.setInt(2, decoration.getId());
+            preparedStatement.setInt(2, idDecoration);
 
 
             preparedStatement.executeUpdate();
@@ -46,6 +46,18 @@ public class DaoDecorationImpl implements DaoDecoration {
         } catch (SQLException e) {
             System.out.println("Error assigning room to the decoration in the db: "+e.getMessage());
         }
+    }
+
+    public void removeDecorationFromRoom(int decorationId) {
+        String query = "UPDATE decorations SET roomId = NULL, available = true WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, decorationId); // Establece el ID de la Decoration a actualizar
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error borrando la decoración de la room en la db"+e.getMessage());        }
     }
 
     public List<Decoration> getAllDecorations() {
@@ -88,13 +100,13 @@ public class DaoDecorationImpl implements DaoDecoration {
         }
     }
 
-    public void updateDecorationAvailability(Decoration decoration, boolean newAvailability) {
+    public void updateDecorationAvailability(int idDecoration, boolean newAvailability) {
         String query = "UPDATE decorations SET available = ? WHERE id = ?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setBoolean(1, newAvailability); // Establece el nuevo valor de available
-            preparedStatement.setInt(2, decoration.getId()); // Obtiene el ID de la Decoration
+            preparedStatement.setInt(2, idDecoration); // Obtiene el ID de la Decoration
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -103,12 +115,12 @@ public class DaoDecorationImpl implements DaoDecoration {
     }
 
 
-    public void deleteDecoration(Decoration decoration) {
+    public void deleteDecoration(int idDecoration) {
         String query = "DELETE FROM decorations WHERE id = ?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, decoration.getId());
+            preparedStatement.setInt(1, idDecoration);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error delating de select decoration object in the db: "+e.getMessage());

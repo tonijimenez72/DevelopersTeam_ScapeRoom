@@ -14,7 +14,6 @@ public class Clue extends RoomElement {
         super(name, price);
         this.id = counter++;
         this.theme = theme;
-        this.roomId = roomId;
     }
 
     public int getId() {

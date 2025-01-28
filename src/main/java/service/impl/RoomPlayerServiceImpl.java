@@ -1,5 +1,7 @@
 package service.impl;
 
+import dao.Impl.DaoRoomImpl;
+import dao.Impl.DaoRoomPlayerImpl;
 import model.Player;
 import model.Room;
 import service.PlayerService;
@@ -13,10 +15,12 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
 
     private final PlayerService playerService;
     private final RoomService roomService;
+    private final DaoRoomPlayerImpl daoRoomPlayer;
 
     public RoomPlayerServiceImpl(PlayerService playerService, RoomService roomService) {
         this.playerService = playerService;
         this.roomService = roomService;
+        this.daoRoomPlayer= new DaoRoomPlayerImpl();
     }
 
     @Override
@@ -33,6 +37,7 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
         player.addPlayedRoom(room);
         room.addPlayerToRoom(player);
         room.setAvailable(false);
+        daoRoomPlayer.addPlayerRoomRelation(playerId,roomId);
         System.out.printf("Room: %s | New player: %s%n", room.getName(), player.getName());
     }
 

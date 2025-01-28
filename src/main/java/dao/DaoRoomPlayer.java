@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DaoRoomPlayer {
 
-    void addPlayerRoomRelation(Player player, Room room);
+    void addPlayerRoomRelation(int idPlayer, int idRoom);
 
     List<int[]> getAllPlayerRoomRelations();
 

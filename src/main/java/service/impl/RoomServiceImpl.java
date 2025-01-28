@@ -1,5 +1,8 @@
 package service.impl;
 
+import dao.Impl.DaoClueImpl;
+import dao.Impl.DaoDecorationImpl;
+import dao.Impl.DaoRoomImpl;
 import model.Clue;
 import model.Decoration;
 import model.Room;
@@ -16,10 +19,20 @@ public class RoomServiceImpl implements RoomService {
     private final List<Room> rooms = new ArrayList<>();
     private final ClueService clueService;
     private final DecorationService decorationService;
+    private  final DaoRoomImpl daoRoom;
+    private  final DaoClueImpl daoClue;
+    private  final DaoDecorationImpl daoDecoration;
+
+
+
 
     public RoomServiceImpl(ClueService clueService, DecorationService decorationService) {
+
         this.clueService = clueService;
         this.decorationService = decorationService;
+        this.daoRoom = new DaoRoomImpl();
+        this.daoClue = new DaoClueImpl();
+        this.daoDecoration= new DaoDecorationImpl();
     }
 
     @Override
@@ -28,6 +41,7 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Room cannot be null.");
         }
         rooms.add(room);
+        daoRoom.addRoom(room);
         System.out.println("Room added: " + room.getName());
     }
 
@@ -41,6 +55,7 @@ public class RoomServiceImpl implements RoomService {
         }
 
         room.addClueToRoom(clue);
+        daoClue.addClueToRoom(clueId,roomId);
         clue.setAvailable(false);
 
     }
@@ -55,12 +70,13 @@ public class RoomServiceImpl implements RoomService {
         }
 
         room.addDecorationToRoom(decoration);
+        daoDecoration.addDecoToRoom(decorationId,roomId);
         decoration.setAvailable(false);
     }
 
     @Override
     public List<Room> getAllRooms() {
-        return new ArrayList<>(rooms);
+        return daoRoom.getAllRooms();
     }
 
     @Override
@@ -81,9 +97,10 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new IllegalArgumentException("Room not found."));
     }
 
-    public void updateRoomStatus(int id, boolean available) {
-        Room room = getRoomById(id);
+    public void updateRoomStatus(int idRoom, boolean available) {
+        Room room = getRoomById(idRoom);
         room.setAvailable(available);
+        daoRoom.updateRoomAvailability(idRoom,available);
     }
 
     @Override
@@ -96,6 +113,7 @@ public class RoomServiceImpl implements RoomService {
 
         room.getClues().remove(clue);
         clue.setAvailable(true);
+        daoClue.removeClueFromRoom(clueId);
     }
 
     @Override
@@ -108,12 +126,14 @@ public class RoomServiceImpl implements RoomService {
 
         room.getDecorations().remove(decoration);
         decoration.setAvailable(true);
+        daoDecoration.removeDecorationFromRoom(decorationId);
     }
 
     @Override
     public void deleteRoom(int id) {
         Room room = getRoomById(id);
         rooms.remove(room);
+        daoRoom.deleteRoom(id);
         System.out.println("Room deleted.");
     }
 

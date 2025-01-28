@@ -1,5 +1,6 @@
 package service.impl;
 
+import dao.Impl.DaoPlayerImpl;
 import model.Player;
 import service.PlayerService;
 
@@ -10,6 +11,13 @@ import java.util.stream.Collectors;
 public class PlayerServiceImpl implements PlayerService {
 
     private final List<Player> players = new ArrayList<>();
+    private final DaoPlayerImpl daoPlayer;
+
+    public PlayerServiceImpl (){
+
+        this.daoPlayer=new DaoPlayerImpl();
+
+    }
 
     @Override
     public void createPlayer(Player player) {
@@ -21,6 +29,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         players.add(player);
+        daoPlayer.addPlayer(player);
         System.out.println("Player created.");
     }
 
@@ -34,7 +43,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getAllPlayers() {
-        return new ArrayList<>(players);
+
+        return daoPlayer.getAllPlayers();
     }
 
     @Override
@@ -42,6 +52,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = getPlayerById(id);
         if (!player.isSubscriber()) {
             player.setSubscriber(true);
+            daoPlayer.addSubscriber(id);
             System.out.println("Player subscribed to notifications.");
         } else {
             System.out.println("Player is already subscribed");
@@ -53,6 +64,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = getPlayerById(id);
         if (player.isSubscriber()) {
             player.setSubscriber(false);
+            daoPlayer.deleteSubscriber(id);
             System.out.println("Player unsubscribed from notifications.");
         } else {
             System.out.println("Player is not subscribed.");
@@ -70,6 +82,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void deletePlayer(int id) {
         Player player = getPlayerById(id);
         players.remove(player);
+        daoPlayer.deletePlayer(id);
         System.out.println("Player removed.");
     }
 

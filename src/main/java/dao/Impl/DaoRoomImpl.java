@@ -17,14 +17,14 @@ public class DaoRoomImpl implements DaoRoom {
 
 
     public void addRoom(Room room) {
-        String query = "INSERT INTO room (id, name, difficulty_level, theme, price, available) VALUES (?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO room (id, name, theme, difficulty_level, price, available) VALUES (?, ?, ?, ?, ?,?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setDouble(1, room.getId());
             statement.setString(2, room.getName()); // Assuming Difficulty is an Enum
-            statement.setString(3, room.getDifficultyLevel().toString()); // Assuming Theme is an Enum
-            statement.setString(4, room.getTheme().toString());
+            statement.setString(3, room.getTheme().name());
+            statement.setString(4, room.getDifficultyLevel().name()); // Assuming Theme is an Enum
             statement.setDouble(5, room.getPrice());
             statement.setBoolean(6, room.isAvailable());
 
@@ -127,14 +127,14 @@ public class DaoRoomImpl implements DaoRoom {
         }
     }
 
-    public void updateRoomAvailability(Room room, boolean isAvailable) {
+    public void updateRoomAvailability(int idRoom, boolean isAvailable) {
         String query = "UPDATE rooms SET available = ? WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setBoolean(1, isAvailable);
-            statement.setInt(2, room.getId());
+            statement.setInt(2, idRoom);
 
             statement.executeUpdate();
         } catch (SQLException e) {
