@@ -1,5 +1,6 @@
 package service.impl;
 
+import dao.Impl.DaoClueImpl;
 import model.Clue;
 import model.Room;
 import service.ClueService;
@@ -10,6 +11,13 @@ import java.util.stream.Collectors;
 
 public class ClueServiceImpl implements ClueService {
     private final List<Clue> clues = new ArrayList<>();
+    private final DaoClueImpl daoClue;
+
+    public ClueServiceImpl(){
+
+
+        this.daoClue= new DaoClueImpl();
+    }
 
     @Override
     public void createClue(Clue clue) {
@@ -17,11 +25,12 @@ public class ClueServiceImpl implements ClueService {
             throw new IllegalArgumentException("Clue cannot be null.");
         }
         clues.add(clue);
+        daoClue.addClue(clue);
     }
 
     @Override
     public List<Clue> getAllClues() {
-        return new ArrayList<>(clues);
+        return daoClue.getAllClues();
     }
 
     @Override
@@ -49,6 +58,7 @@ public class ClueServiceImpl implements ClueService {
     public void updateClueStatus(int id, boolean available) {
         Clue clue = getClueById(id);
         clue.setAvailable(available);
+        daoClue.updateClueAvailability(id,available);
         System.out.printf("Room status updated to: %s%n", available ? "available" : "not available");
     }
 
@@ -56,5 +66,6 @@ public class ClueServiceImpl implements ClueService {
     public void removeClue(int id) {
         Clue clue = getClueById(id);
         clues.remove(clue);
+        daoClue.deleteClue(id);
     }
 }

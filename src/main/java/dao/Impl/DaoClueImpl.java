@@ -33,22 +33,40 @@ public class DaoClueImpl implements DaoClue {
         }
     }
 
-    public void addClueToRoom(Clue clue, Room room) {
+    public void addClueToRoom(int idClue, int idRoom) {
 
         String sql = "UPDATE Clue SET roomId = ?, available = ? WHERE id = ? AND available = 1";
 
         try (   Connection connection = DatabaseConnection.getInstance().getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, room.getId());
+            statement.setInt(1, idRoom);
             statement.setBoolean(3,false);
-            statement.setInt(2, clue.getId());
+            statement.setInt(2, idClue);
 
 
             statement.executeUpdate();
         } catch (SQLException e) {
 
             System.err.println("Error assigning Room to the Clue in the db: " + e.getMessage());
+        }
+    }
+
+    public void removeClueFromRoom(int clueId) {
+        String sql = "UPDATE Clue SET roomId = NULL, available = TRUE WHERE id = ?";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, clueId); // ID del clue a actualizar
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("La pista fue removida de la habitación y está disponible nuevamente.");
+            } else {
+                System.out.println("No se encontró la pista con el ID proporcionado.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al remover la pista de la habitación en la db " + e.getMessage());
         }
     }
 
@@ -95,13 +113,13 @@ public class DaoClueImpl implements DaoClue {
         }
     }
 
-    public void updateClueAvailability(Clue clue, boolean available) {
+    public void updateClueAvailability(int idClue, boolean available) {
         String sql = "UPDATE Clue SET available = ? WHERE id = ?";
         try (   Connection connection = DatabaseConnection.getInstance().getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setBoolean(1, available); // Nuevo valor para el campo 'available'
-            statement.setInt(2, clue.getId()); // ID del clue a actualizar
+            statement.setInt(2, idClue); // ID del clue a actualizar
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -109,12 +127,12 @@ public class DaoClueImpl implements DaoClue {
     }
 
 
-    public void deleteClue(Clue clue) {
+    public void deleteClue(int idClue) {
         String sql = "DELETE FROM Clue WHERE id = ?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, clue.getId());
+            statement.setInt(1, idClue);
             statement.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error deleting the Clue in the db: " + e.getMessage());

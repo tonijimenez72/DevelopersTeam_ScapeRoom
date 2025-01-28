@@ -14,6 +14,11 @@ public class Player implements NotificationObserver {
     private List<Room> playedRooms;
     private List<Room> solvedRooms;
 
+    public Player(){
+
+
+    }
+
      public Player(String name, String email) {
         this.id = counter++;
         this.name = name;

@@ -19,6 +19,7 @@ public class Room {
     private List<Decoration> decorations;
     private List<Player> players;
 
+
     public Room() {}
 
     public Room(String name, Theme theme, DifficultyLevel difficultyLevel, double price) {

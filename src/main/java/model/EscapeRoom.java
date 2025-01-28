@@ -8,8 +8,9 @@ public class EscapeRoom {
     public EscapeRoom() {
     }
 
-    public EscapeRoom(String name) {
+    public EscapeRoom(int id,String name) {
         this.name = SCAPE_ROOM_NAME;
+        this.id=id;
     }
 
     public int getId() {

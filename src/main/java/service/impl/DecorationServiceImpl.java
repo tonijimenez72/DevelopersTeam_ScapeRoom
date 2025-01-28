@@ -1,5 +1,6 @@
 package service.impl;
 
+import dao.Impl.DaoDecorationImpl;
 import model.Clue;
 import model.Decoration;
 import model.Room;
@@ -11,6 +12,14 @@ import java.util.stream.Collectors;
 
 public class DecorationServiceImpl implements DecorationService {
     private final List<Decoration> decorations = new ArrayList<>();
+    private final DaoDecorationImpl daoDecoration;
+
+    public DecorationServiceImpl (){
+
+    this.daoDecoration=new DaoDecorationImpl();
+
+    }
+
 
     @Override
     public void addDecoration(Decoration decoration) {
@@ -18,10 +27,12 @@ public class DecorationServiceImpl implements DecorationService {
             throw new IllegalArgumentException("Decoration cannot be null.");
         }
         decorations.add(decoration);
+        daoDecoration.insertDecoration(decoration);
+
     }
     @Override
     public List<Decoration> getAllDecorations() {
-        return new ArrayList<>(decorations);
+        return daoDecoration.getAllDecorations();
     }
 
     @Override
@@ -47,6 +58,7 @@ public class DecorationServiceImpl implements DecorationService {
     public void updateDecorationStatus(int id, boolean available) {
         Decoration decoration = getDecorationById(id);
         decoration.setAvailable(available);
+        daoDecoration.updateDecorationAvailability(id,available);
         System.out.printf("Decoration status updated to: %s%n", available ? "available" : "not available");
     }
 
@@ -54,5 +66,6 @@ public class DecorationServiceImpl implements DecorationService {
     public void removeDecoration(int id) {
         Decoration decoration = getDecorationById(id);
         decorations.remove(decoration);
+        daoDecoration.deleteDecoration(id);
     }
 }

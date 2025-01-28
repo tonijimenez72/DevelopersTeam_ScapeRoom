@@ -14,13 +14,13 @@ import java.util.List;
 
 public class DaoRoomPlayerImpl implements DaoRoomPlayer {
 
-    public void addPlayerRoomRelation(Player player, Room room) {
+    public void addPlayerRoomRelation(int idPlayer, int idRoom) {
         String query = "INSERT INTO player_has_room (player_id, room_id) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
-            statement.setInt(1, player.getId());
-            statement.setInt(2, room.getId());
+            statement.setInt(1, idPlayer);
+            statement.setInt(2, idRoom);
             statement.executeUpdate();
 
         } catch (SQLException e) {
