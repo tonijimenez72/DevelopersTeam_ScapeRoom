@@ -1,4 +1,4 @@
-package exception.notification;
+package exception;
 
 public class NotificationServiceException extends Exception{
     public NotificationServiceException(String message) {
