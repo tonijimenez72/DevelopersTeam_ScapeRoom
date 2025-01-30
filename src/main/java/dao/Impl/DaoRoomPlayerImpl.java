@@ -2,6 +2,8 @@ package dao.Impl;
 
 import dao.DaoRoomPlayer;
 import database.DatabaseConnection;
+import enums.DifficultyLevel;
+import enums.Theme;
 import model.Player;
 import model.Room;
 
@@ -13,8 +15,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DaoRoomPlayerImpl implements DaoRoomPlayer {
+    @Override
+    public void safe(Player player, Room room) {
+        String query = "INSERT INTO player_has_room (player_id, room_id) VALUES (?, ?)";
 
-    public void addPlayerRoomRelation(int idPlayer, int idRoom) {
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, player.getId());
+            statement.setInt(2, room.getId());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the relation player room  in the db: "+e.getMessage());
+        }
+    }
+
+    @Override
+    public List<int[]> getAll() {
+
+        List<int[]> relations = new ArrayList<>();
+        String query = "SELECT * FROM player_has_room";
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int playerId = resultSet.getInt("player_id");
+                int roomId = resultSet.getInt("room_id");
+                relations.add(new int[]{playerId, roomId});
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting all the registers of player_has_room from the db: "+e.getMessage());
+
+        }
+
+        return relations;
+
+
+    }
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*public void addPlayerRoomRelation(int idPlayer, int idRoom) {
         String query = "INSERT INTO player_has_room (player_id, room_id) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -75,5 +141,5 @@ public class DaoRoomPlayerImpl implements DaoRoomPlayer {
         } catch (SQLException e) {
             System.out.println("Error deleting the player id and player id chosen in the db "+e.getMessage());
         }
-    }
-}
+    }*/
+
