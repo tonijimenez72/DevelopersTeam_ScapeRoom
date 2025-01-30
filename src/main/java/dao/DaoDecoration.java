@@ -5,11 +5,20 @@ import model.Room;
 
 import java.util.List;
 
-public interface DaoDecoration {
+public interface DaoDecoration extends  GenericDao <Decoration> {
 
-    void insertDecoration(Decoration decoration);
+
+
+
+
+
+
+
+
+
+    /*void insertDecoration(Decoration decoration);
     List<Decoration> getAllDecorations();
     void updateDecoration(Decoration decoration);
     void deleteDecoration(int idDecoration);
-    void addDecoToRoom(int idDecoration, int idRoom);
+    void addDecoToRoom(int idDecoration, int idRoom);*/
 }

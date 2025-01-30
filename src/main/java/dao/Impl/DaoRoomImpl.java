@@ -16,7 +16,113 @@ import java.util.List;
 public class DaoRoomImpl implements DaoRoom {
 
 
-    public void addRoom(Room room) {
+
+    @Override
+    public void safe(Room room)  {
+
+        String query = "INSERT INTO room (name, theme, difficulty_level, price, available) VALUES (?, ?, ?, ?, ?)";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, room.getName());
+            statement.setString(2, room.getTheme().name());
+            statement.setString(3, room.getDifficultyLevel().name());
+            statement.setDouble(4,room.getPrice());
+            statement.setBoolean(5, room.isAvailable());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the room in the db: "+e.getMessage());
+        }
+    }
+
+
+    @Override
+    public List<Room> getAll() {
+
+        List<Room>rooms = new ArrayList<>();
+
+        String query ="SELECT* From room WHERE is_deleted = false";
+
+        try (Connection connection= DatabaseConnection.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet= preparedStatement.executeQuery()) {
+
+
+            while (resultSet.next()) {
+                Room room = new Room();
+                room.setId(resultSet.getInt("id"));
+                room.setName(resultSet.getString("name"));
+                room.setTheme(Theme.valueOf(resultSet.getString("theme")));
+                room.setDifficultyLevel(DifficultyLevel.valueOf(resultSet.getString("difficulty_level")));
+                room.setPrice(resultSet.getDouble("price"));
+                room.setAvailable(resultSet.getBoolean("available"));
+
+                rooms.add(room);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Error getting all the rooms from de db"+e.getMessage());        }
+
+
+        return rooms;
+    }
+
+    @Override
+    public Room getById(int id) {
+
+        String query = "SELECT * FROM room WHERE id = ? ";
+        Room room=null;
+
+        try (   Connection connection= DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    room = new Room();
+                    room.setId(resultSet.getInt("id"));
+                    room.setName(resultSet.getString("name"));
+                    room.setTheme(Theme.valueOf(resultSet.getString("theme")));
+                    room.setDifficultyLevel(DifficultyLevel.valueOf(resultSet.getString("difficulty_level")));
+                    room.setPrice(resultSet.getDouble("price"));
+                    room.setAvailable(resultSet.getBoolean("available"));
+                }
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println("Error getting the specific room by id: "+e.getMessage());        }
+
+        return room;
+
+    }
+
+    @Override
+    public void remove(Room room) {
+
+        String query = "UPDATE room SET is_deleted = ? WHERE id = ?";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setBoolean(1, true); // is_deleted = true
+            statement.setInt(2, room.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error removing the specific room: "+e.getMessage());
+        }
+
+    }
+
+
+
+
+
+    /*public void addRoom(Room room) {
         String query = "INSERT INTO room (id, name, theme, difficulty_level, price, available) VALUES (?, ?, ?, ?, ?,?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -153,7 +259,7 @@ public class DaoRoomImpl implements DaoRoom {
         } catch (SQLException e) {
             System.out.println("Error trying to deleting the chosen room in the db: "+e.getMessage());
         }
-    }
+    }*/
 
 
 

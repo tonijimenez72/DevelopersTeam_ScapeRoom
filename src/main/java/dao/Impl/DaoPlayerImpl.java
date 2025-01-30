@@ -2,7 +2,10 @@ package dao.Impl;
 
 import dao.DaoPlayer;
 import database.DatabaseConnection;
+import enums.DifficultyLevel;
+import enums.Theme;
 import model.Player;
+import model.Room;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +16,130 @@ import java.util.List;
 
 public class DaoPlayerImpl implements DaoPlayer {
 
-    public void addPlayer(Player player) {
+
+
+    @Override
+    public void safe(Player player) {
+
+        String query = "INSERT INTO player (name, email) VALUES (?, ?)";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, player.getName());
+            statement.setString(2, player.getEmail());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the player in the db: "+e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<Player> getAll() {
+
+        List<Player>players = new ArrayList<>();
+
+        String query ="SELECT* From player WHERE is_deleted = false";
+
+        try (Connection connection= DatabaseConnection.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet= preparedStatement.executeQuery()) {
+
+
+            while (resultSet.next()) {
+                Player player = new Player();
+                player.setId(resultSet.getInt("id"));
+                player.setName(resultSet.getString("name"));
+                player.setEmail(resultSet.getString("email"));
+
+                players.add(player);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Error getting all the players from de db"+e.getMessage());        }
+
+
+        return players;
+
+    }
+
+    @Override
+    public Player getById(int id) {
+
+        String query = "SELECT * FROM player WHERE id = ? ";
+        Player player=null;
+
+        try (   Connection connection= DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    player = new Player();
+                    player.setId(resultSet.getInt("id"));
+                    player.setName(resultSet.getString("name"));
+                    player.setEmail(resultSet.getString("email"));
+                }
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println("Error getting the specific player by id: "+e.getMessage());        }
+
+        return player;
+
+    }
+
+    @Override
+    public void remove(Player player) {
+
+        String query = "UPDATE player SET is_deleted = ? WHERE id = ?";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setBoolean(1, true); // is_deleted = true
+            statement.setInt(2, player.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error removing the specific player: "+e.getMessage());
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*public void addPlayer(Player player) {
         String query = "INSERT INTO player (id, name, email) VALUES (?, ?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -97,5 +223,5 @@ public class DaoPlayerImpl implements DaoPlayer {
         } catch (SQLException e) {
             System.out.println("Error deleting the chosen player in the db" + e.getMessage());
         }
-    }
+    }*/
 }

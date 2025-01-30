@@ -1,7 +1,10 @@
 package dao.Impl;
 
 import dao.DaoDecoration;
+import dao.DaoRoom;
 import database.DatabaseConnection;
+import enums.DifficultyLevel;
+import enums.Theme;
 import model.Decoration;
 import model.Room;
 
@@ -15,7 +18,141 @@ import java.util.List;
 public class DaoDecorationImpl implements DaoDecoration {
 
 
-    public void insertDecoration(Decoration decoration) {
+    @Override
+    public void safe(Decoration decoration) {
+
+        String query = "INSERT INTO decoration (name, material, price) VALUES (?, ?, ?)";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, decoration.getName());
+            statement.setString(2, decoration.getMaterial());
+            statement.setDouble(3, decoration.getPrice());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the decoration in the db: "+e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<Decoration> getAll() {
+
+        List<Decoration>decorations = new ArrayList<>();
+
+        String query ="SELECT* From decoration WHERE is_deleted = false";
+
+        try (Connection connection= DatabaseConnection.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet= preparedStatement.executeQuery()) {
+
+
+            while (resultSet.next()) {
+                Decoration decoration = new Decoration();
+
+                decoration.setId(resultSet.getInt("id"));
+                decoration.setName(resultSet.getString("name"));
+                decoration.setMaterial(resultSet.getString("material"));
+                decoration.setPrice(resultSet.getInt("price"));
+                decoration.setAvailable(resultSet.getBoolean("available"));
+                decoration.setRoomId(resultSet.getInt("room_id"));
+
+                decorations.add(decoration);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Error getting all the decorations from de db"+e.getMessage());        }
+
+
+        return decorations;
+
+    }
+
+    @Override
+    public Decoration getById(int id) {
+
+        String query = "SELECT * FROM decoration WHERE id = ? ";
+        Decoration decoration=null;
+
+        try (   Connection connection= DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    decoration = new Decoration();
+
+                    decoration.setId(resultSet.getInt("id"));
+                    decoration.setName(resultSet.getString("name"));
+                    decoration.setMaterial(resultSet.getString("material"));
+                    decoration.setPrice(resultSet.getInt("price"));
+                    decoration.setAvailable(resultSet.getBoolean("available"));
+                    decoration.setRoomId(resultSet.getInt("room_id"));
+                }
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println("Error getting the specific decoration by id: "+e.getMessage());        }
+
+        return decoration;
+
+    }
+
+    @Override
+    public void remove(Decoration decoration) {
+
+        String query = "UPDATE decoration SET is_deleted = ? WHERE id = ?";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setBoolean(1, true); // is_deleted = true
+            statement.setInt(2, decoration.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error removing the specific decoration: "+e.getMessage());
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*public void insertDecoration(Decoration decoration) {
         String query = "INSERT INTO decorations (id, name, material, price, available) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -125,7 +262,7 @@ public class DaoDecorationImpl implements DaoDecoration {
         } catch (SQLException e) {
             System.out.println("Error delating de select decoration object in the db: "+e.getMessage());
         }
-    }
+    }*/
 
 
 

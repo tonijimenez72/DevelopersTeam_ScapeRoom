@@ -5,13 +5,26 @@ import model.Room;
 
 import java.util.List;
 
-public interface DaoRoomPlayer {
+public interface DaoRoomPlayer  {
 
-    void addPlayerRoomRelation(int idPlayer, int idRoom);
+
+    void safe ( Player player, Room room);
+
+    List<int[]> getAll();
+
+
+
+
+
+
+
+
+    //void remove (Player player, Room room);
+    /*void addPlayerRoomRelation(int idPlayer, int idRoom);
 
     List<int[]> getAllPlayerRoomRelations();
 
     void updatePlayerRoomRelation(int oldPlayerId, int oldRoomId, int newPlayerId, int newRoomId);
 
-    void deletePlayerRoomRelation(int playerId, int roomId);
+    void deletePlayerRoomRelation(int playerId, int roomId);*/
 }

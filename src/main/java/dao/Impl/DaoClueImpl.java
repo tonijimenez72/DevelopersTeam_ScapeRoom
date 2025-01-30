@@ -2,6 +2,7 @@ package dao.Impl;
 
 import dao.DaoClue;
 import database.DatabaseConnection;
+import enums.DifficultyLevel;
 import enums.Theme;
 import model.Clue;
 import model.Room;
@@ -15,7 +16,125 @@ import java.util.List;
 
 public class DaoClueImpl implements DaoClue {
 
-    public void addClue(Clue clue) {
+
+    @Override
+    public void safe(Clue clue) {
+
+        String query = "INSERT INTO clue (name, theme, price) VALUES (?, ?, ?)";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, clue.getName());
+            statement.setString(2, clue.getTheme().name());
+            statement.setDouble(3, clue.getPrice());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the clue in the db: "+e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<Clue> getAll() {
+
+        List<Clue>clues = new ArrayList<>();
+
+        String query ="SELECT* From clue WHERE is_deleted = false";
+
+        try (Connection connection= DatabaseConnection.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet= preparedStatement.executeQuery()) {
+
+
+            while (resultSet.next()) {
+                Clue clue = new Clue();
+                clue.setId(resultSet.getInt("id"));
+                clue.setName(resultSet.getString("name"));
+                clue.setTheme(Theme.valueOf(resultSet.getString("theme")));
+                clue.setPrice(resultSet.getDouble("price"));
+                clue.setAvailable(resultSet.getBoolean("available"));
+                clue.setRoomId(resultSet.getInt("room_id"));
+
+                clues.add(clue);
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Error getting all the clues from de db"+e.getMessage());        }
+
+
+        return clues;
+
+    }
+
+    @Override
+    public Clue getById(int id) {
+
+        String query = "SELECT * FROM clue WHERE id = ? ";
+        Clue clue=null;
+
+        try (   Connection connection= DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    clue = new Clue();
+                    clue.setId(resultSet.getInt("id"));
+                    clue.setName(resultSet.getString("name"));
+                    clue.setTheme(Theme.valueOf(resultSet.getString("theme")));
+                    clue.setPrice(resultSet.getDouble("price"));
+                    clue.setAvailable(resultSet.getBoolean("available"));
+                    clue.setRoomId(resultSet.getInt("room_id"));
+
+
+                }
+            }
+
+        } catch (SQLException e) {
+
+            System.out.println("Error getting the specific clue by id: "+e.getMessage());        }
+
+        return clue;
+
+    }
+
+    @Override
+    public void remove(Clue clue) {
+
+        String query = "UPDATE clue SET is_deleted = ? WHERE id = ?";
+
+        try (   Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setBoolean(1, true); // is_deleted = true
+            statement.setInt(2, clue.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error removing the specific clue: "+e.getMessage());
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*public void addClue(Clue clue) {
         String query = "INSERT INTO Clue (id, name, theme, price, available) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -137,7 +256,7 @@ public class DaoClueImpl implements DaoClue {
         } catch (SQLException e) {
             System.err.println("Error deleting the Clue in the db: " + e.getMessage());
         }
-    }
+    }*/
 
 
 }

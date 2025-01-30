@@ -5,9 +5,21 @@ import model.Room;
 
 import java.util.List;
 
-public interface DaoClue {
+public interface DaoClue extends GenericDao<Clue>{
 
-    void addClue(Clue clue);
+
+
+
+
+
+
+
+
+
+
+
+
+    /*void addClue(Clue clue);
 
     List<Clue> getAllClues();
 
@@ -15,5 +27,5 @@ public interface DaoClue {
 
     void deleteClue(int idClue);
 
-    void addClueToRoom(int idClue, int idRoom);
+    void addClueToRoom(int idClue, int idRoom);*/
 }
