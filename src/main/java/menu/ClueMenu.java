@@ -3,8 +3,7 @@ package menu;
 import controller.ClueController;
 import enums.Theme;
 import model.Clue;
-
-import java.util.Scanner;
+import utils.InputValidation;
 
 public class ClueMenu {
     private final ClueController clueController;
@@ -28,58 +27,32 @@ public class ClueMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice = -1;
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> createClue(scanner);
-                case 2 -> readClue(scanner);
+                case 1 -> createClue();
+                case 2 -> readClue();
                 case 3 -> readAllClues();
                 case 4 -> readAllAvailableClues();
-                case 5 -> updateClueStatus(scanner);
-                case 6 -> deleteClue(scanner);
+                case 5 -> updateClueStatus();
+                case 6 -> deleteClue();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    private void createClue(Scanner scanner) {
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter price: ");
-        double price;
-        try {
-            price = Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price. Please try again.");
-            return;
-        }
-
-        System.out.print("Enter theme (MISTERY, FANTASY, CIFI): ");
-        String themeInput = scanner.nextLine().toUpperCase();
+    private void createClue() {
+        String name = InputValidation.validateStringInput("Enter name: ");
+        double price = InputValidation.validatePriceInput("Enter price: ");
+        String themeInput = InputValidation.validateStringInput("Enter theme (MISTERY, FANTASY, CIFI): ");
         Theme theme;
         try {
-            theme = Theme.valueOf(themeInput);
+            theme = Theme.valueOf(themeInput.toUpperCase());
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid theme. Please try again.");
             return;
@@ -89,10 +62,8 @@ public class ClueMenu {
         clueController.addClue(clue);
     }
 
-    private void readClue(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
+    private void readClue() {
+        int id = InputValidation.validateIntInput("Enter id: ");
         Clue clue = clueController.getClueById(id);
         if (clue != null) {
             System.out.println("Clue found: " + clue);
@@ -109,18 +80,9 @@ public class ClueMenu {
         clueController.showAllAvailableClues();
     }
 
-    private void updateClueStatus(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
-        System.out.print("Enter new status (true/false): ");
-        boolean newStatus;
-        try {
-            newStatus = Boolean.parseBoolean(scanner.nextLine());
-        } catch (Exception e) {
-            System.out.println("Invalid status input. Please enter true or false.");
-            return;
-        }
+    private void updateClueStatus() {
+        int id = InputValidation.validateIntInput("Enter id: ");
+        boolean newStatus = InputValidation.validateStringInput("Enter new status (true/false): ").equalsIgnoreCase("true");
 
         try {
             clueController.updateClueStatus(id, newStatus);
@@ -130,10 +92,8 @@ public class ClueMenu {
         }
     }
 
-    private void deleteClue(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
+    private void deleteClue() {
+        int id = InputValidation.validateIntInput("Enter id: ");
         try {
             clueController.removeClue(id);
             System.out.println("Clue removed successfully.");

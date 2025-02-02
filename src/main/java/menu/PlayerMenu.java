@@ -2,6 +2,7 @@ package menu;
 
 import controller.PlayerController;
 import model.Player;
+import utils.InputValidation;
 
 import java.util.Scanner;
 
@@ -22,60 +23,42 @@ public class PlayerMenu {
                 5. Show all subscribers
                 6. Delete subscription
                 7. Delete player
+                8. Send Notification
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice = -1;
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> createPlayer(scanner);
-                case 2 -> addSubscription(scanner);
-                case 3 -> showPlayer(scanner);
+                case 1 -> createPlayer();
+                case 2 -> addSubscription();
+                case 3 -> showPlayer();
                 case 4 -> showAllPlayers();
                 case 5 -> showAllSubscribers();
-                case 6 -> deleteSubscription(scanner);
-                case 7 -> deletePlayer(scanner);
-                case 8 -> sendNotification(scanner);
+                case 6 -> deleteSubscription();
+                case 7 -> deletePlayer();
+                case 8 -> sendNotification();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    public void sendNotification(Scanner scanner) {
-        System.out.print("Enter notification message: ");
-        String message = scanner.nextLine();
+    public void sendNotification() {
+        String message = InputValidation.validateStringInput("Enter notification message: ");
         playerController.sendNotification(message);
     }
 
-    private void createPlayer(Scanner scanner) {
-        System.out.print("Enter player name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter player email: ");
-        String email = scanner.nextLine();
+    private void createPlayer() {
+        String name = InputValidation.validateStringInput("Enter player name: ");
+        String email = InputValidation.validateEmailInput("Enter player email: ");
 
         try {
             Player player = new Player(name, email);
@@ -85,17 +68,13 @@ public class PlayerMenu {
         }
     }
 
-    private void addSubscription(Scanner scanner) {
-        System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
-
+    private void addSubscription() {
+        int id = InputValidation.validateIntInput("Enter ID: ");
         playerController.addSubscription(id);
     }
 
-    private void showPlayer(Scanner scanner) {
-        System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
-
+    private void showPlayer() {
+        int id = InputValidation.validateIntInput("Enter ID: ");
         try {
             Player player = playerController.getPlayerById(id);
             System.out.println(player);
@@ -112,17 +91,15 @@ public class PlayerMenu {
         playerController.showAllSubscribers();
     }
 
-    private void deleteSubscription(Scanner scanner) {
-        System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
+    private void deleteSubscription() {
+        int id = InputValidation.validateIntInput("Enter ID: ");
         if (id == -1) return;
 
         playerController.deleteSubscription(id);
     }
 
-    private void deletePlayer(Scanner scanner) {
-        System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
+    private void deletePlayer() {
+        int id = InputValidation.validateIntInput("Enter ID: ");
         if (id == -1) return;
 
         playerController.deletePlayer(id);
