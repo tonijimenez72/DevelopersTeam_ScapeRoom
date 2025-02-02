@@ -1,6 +1,7 @@
 package menu;
 
 import controller.*;
+import utils.InputValidation;
 
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class MainMenu {
     private final RoomMenu roomMenu;
     private final PlayerMenu playerMenu;
     private final RoomPlayerMenu roomPlayerMenu;
+    private final Scanner scanner;
 
     public MainMenu(ClueController clueController, DecorationController decorationController, RoomController roomController, PlayerController playerController, RoomPlayerController roomPlayerController) {
         this.clueMenu = new ClueMenu(clueController);
@@ -18,6 +20,7 @@ public class MainMenu {
         this.roomMenu = new RoomMenu(roomController);
         this.playerMenu = new PlayerMenu(playerController);
         this.roomPlayerMenu = new RoomPlayerMenu(roomPlayerController);
+        this.scanner = new Scanner(System.in);
     }
 
     public void showMenu() {
@@ -36,26 +39,11 @@ public class MainMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-        int choice=-1;
+        int choice = -1;
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> clueMenu.run();
@@ -63,13 +51,11 @@ public class MainMenu {
                 case 3 -> roomMenu.run();
                 case 4 -> playerMenu.run();
                 case 5 -> roomPlayerMenu.run();
-                case 6 -> playerMenu.sendNotification(scanner);
+                case 6 -> playerMenu.sendNotification();
                 case 7 -> roomMenu.showTotalSalesAmount();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
-
-
 }

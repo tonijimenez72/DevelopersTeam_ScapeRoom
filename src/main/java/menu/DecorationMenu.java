@@ -2,8 +2,7 @@ package menu;
 
 import controller.DecorationController;
 import model.Decoration;
-
-import java.util.Scanner;
+import utils.InputValidation;
 
 public class DecorationMenu {
     private final DecorationController decorationController;
@@ -27,65 +26,37 @@ public class DecorationMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice = -1;
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> createDecoration(scanner);
-                case 2 -> readDecoration(scanner);
+                case 1 -> createDecoration();
+                case 2 -> readDecoration();
                 case 3 -> showAllDecorations();
                 case 4 -> showAllAvailableDecorations();
-                case 5 -> updateDecorationStatus(scanner);
-                case 6 -> deleteDecoration(scanner);
+                case 5 -> updateDecorationStatus();
+                case 6 -> deleteDecoration();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    private void createDecoration(Scanner scanner) {
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter price: ");
-        double price;
-        try {
-            price = Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price. Please try again.");
-            return;
-        }
-
-        System.out.print("Enter material: ");
-        String material = scanner.nextLine();
+    private void createDecoration() {
+        String name = InputValidation.validateStringInput("Enter name: ");
+        double price = InputValidation.validatePriceInput("Enter price: ");
+        String material = InputValidation.validateStringInput("Enter material: ");
 
         Decoration decoration = new Decoration(name, price, material);
         decorationController.addDecoration(decoration);
     }
 
-    private void readDecoration(Scanner scanner) {
-        System.out.print("Enter decoration id: ");
-        int id = scanner.nextInt();
-
-        Decoration decoration= decorationController.getDecorationById(id);
+    private void readDecoration() {
+        int id = InputValidation.validateIntInput("Enter decoration id: ");
+        Decoration decoration = decorationController.getDecorationById(id);
         if (decoration != null) {
             System.out.println("Decoration found: " + decoration);
         } else {
@@ -101,18 +72,9 @@ public class DecorationMenu {
         decorationController.showAllAvailableDecorations();
     }
 
-    private void updateDecorationStatus(Scanner scanner) {
-        System.out.print("Enter id: ");
-       int id = scanner.nextInt();
-
-        System.out.print("Enter new status (true/false): ");
-        boolean newStatus;
-        try {
-            newStatus = Boolean.parseBoolean(scanner.nextLine());
-        } catch (Exception e) {
-            System.out.println("Invalid status input. Please enter true or false.");
-            return;
-        }
+    private void updateDecorationStatus() {
+        int id = InputValidation.validateIntInput("Enter id: ");
+        boolean newStatus = InputValidation.validateStringInput("Enter new status (true/false): ").equalsIgnoreCase("true");
 
         try {
             decorationController.updateDecorationStatus(id, newStatus);
@@ -122,10 +84,8 @@ public class DecorationMenu {
         }
     }
 
-    private void deleteDecoration(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
+    private void deleteDecoration() {
+        int id = InputValidation.validateIntInput("Enter id: ");
         try {
             decorationController.removeDecoration(id);
             System.out.println("Decoration removed successfully.");
@@ -133,5 +93,4 @@ public class DecorationMenu {
             System.out.println("Error deleting decoration: " + e.getMessage());
         }
     }
-
 }
