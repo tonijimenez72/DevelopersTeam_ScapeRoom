@@ -59,7 +59,7 @@ public class MainMenu {
                 case 5 -> playerMenu.run();
                 case 6 -> roomPlayerMenu.run();
                 case 7 -> roomMenu.showTotalSalesAmount();
-                case 8 -> ticketController.showTotalIncome(); // ✅ CORREGIDO
+                case 8 -> ticketController.showTotalIncome();
                 case 0 -> { return; }
                 default -> System.out.println("Invalid option. Please try again.");
             }

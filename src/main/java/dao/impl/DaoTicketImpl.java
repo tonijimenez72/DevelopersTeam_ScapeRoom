@@ -13,6 +13,8 @@ public class DaoTicketImpl implements DaoTicket {
     private static final String INSERT_QUERY = "INSERT INTO tickets (room_id, player_id, total_price) VALUES (?, ?, ?)";
     private static final String TOTAL_REVENUE_QUERY = "SELECT SUM(total_price) FROM tickets";
 
+    //INSERT INTO tickets (room_id, player_id, total_price) VALUES (1, 1, 20.5)
+
     @Override
     public void save(Ticket ticket) throws DatabaseOperationException {
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -33,11 +35,6 @@ public class DaoTicketImpl implements DaoTicket {
             stmt.setDouble(3, ticket.getTotalPrice());
             stmt.executeUpdate();
 
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    ticket.setId(generatedKeys.getInt(1));
-                }
-            }
         } catch (SQLException e) {
             throw new DatabaseOperationException("Error saving ticket to database");
         }

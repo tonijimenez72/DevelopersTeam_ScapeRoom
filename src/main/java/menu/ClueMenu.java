@@ -35,21 +35,7 @@ public class ClueMenu {
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> create();

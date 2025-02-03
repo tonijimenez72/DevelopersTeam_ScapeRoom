@@ -17,6 +17,12 @@ public class DaoRoomPlayerImpl implements DaoRoomPlayer {
     public void save(RoomPlayer roomPlayer) {
         String query = "INSERT INTO player_has_room (player_id, room_id, is_solved) VALUES (?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE is_solved = ?";
+       /*String query;
+        if (roomPlayer.getId() >0) {
+            query = "UPDATE INTO player_has_room  SET player_id = ?, room_id = ?, is_solved  = ?) VALUES (?, ?, ?)";
+        } else {
+            query = "INSERT INTO player_has_room (player_id, room_id, is_solved) VALUES (?, ?, ?) ";
+        }*/
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -24,7 +30,7 @@ public class DaoRoomPlayerImpl implements DaoRoomPlayer {
             statement.setInt(1, roomPlayer.getPlayerId());
             statement.setInt(2, roomPlayer.getRoomId());
             statement.setBoolean(3, roomPlayer.isSolved());
-            statement.setBoolean(4, roomPlayer.isSolved()); // Para la actualización
+            statement.setBoolean(4, roomPlayer.isSolved());
 
             statement.executeUpdate();
 
