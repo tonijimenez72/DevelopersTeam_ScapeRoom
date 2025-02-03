@@ -1,6 +1,8 @@
 package menu;
 
 import controller.ClueController;
+import controller.RoomController;
+import utils.InputValidation;
 import enums.Theme;
 import model.Clue;
 
@@ -8,9 +10,11 @@ import java.util.Scanner;
 
 public class ClueMenu {
     private final ClueController clueController;
+    private final RoomController roomController;
 
-    public ClueMenu(ClueController clueController) {
+    public ClueMenu(ClueController clueController, RoomController roomController) {
         this.clueController = clueController;
+        this.roomController = roomController;
     }
 
     public void showMenu() {
@@ -19,9 +23,7 @@ public class ClueMenu {
                 1. Create clue
                 2. Show clue
                 3. Show all clues
-                4. Show all available clues
-                5. Update clue status
-                6. Delete clue
+                4. Delete clue
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -29,7 +31,7 @@ public class ClueMenu {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        int choice = -1;
+        int choice;
 
         while (true) {
             showMenu();
@@ -50,92 +52,50 @@ public class ClueMenu {
             }
 
             switch (choice) {
-                case 1 -> createClue(scanner);
-                case 2 -> readClue(scanner);
-                case 3 -> readAllClues();
-                case 4 -> readAllAvailableClues();
-                case 5 -> updateClueStatus(scanner);
-                case 6 -> deleteClue(scanner);
+                case 1 -> create();
+                case 2 -> read();
+                case 3 -> readAll();
+                case 4 -> delete();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    private void createClue(Scanner scanner) {
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
+    private void create() {
+        String name = InputValidation.validateStringInput("Enter name: ");
+        double price = InputValidation.validatePriceInput("Enter price: ");
+        String themeInput = InputValidation.validateStringInput("Enter theme (MISTERY, FANTASY, CIFI): ");
+        int roomId = InputValidation.validateIdInput("Enter room ID: ");
 
-        System.out.print("Enter price: ");
-        double price;
-        try {
-            price = Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price. Please try again.");
-            return;
-        }
-
-        System.out.print("Enter theme (MISTERY, FANTASY, CIFI): ");
-        String themeInput = scanner.nextLine().toUpperCase();
         Theme theme;
+
         try {
-            theme = Theme.valueOf(themeInput);
+            theme = Theme.valueOf(themeInput.toUpperCase());
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid theme. Please try again.");
             return;
         }
 
-        Clue clue = new Clue(name, price, theme);
-        clueController.addClue(clue);
+        clueController.add(name, price, theme, roomId);
     }
 
-    private void readClue(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
-        Clue clue = clueController.getClueById(id);
-        if (clue != null) {
-            System.out.println("Clue found: " + clue);
-        } else {
+    private void read() {
+        int id = InputValidation.validateIntInput("Enter id: ");
+        Clue clue = clueController.getById(id);
+        if (clue == null) {
             System.out.println("Clue not found.");
         }
     }
 
-    private void readAllClues() {
-        clueController.showAllClues();
+    private void readAll() {
+        clueController.showAll();
     }
 
-    private void readAllAvailableClues() {
-        clueController.showAllAvailableClues();
-    }
-
-    private void updateClueStatus(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
-        System.out.print("Enter new status (true/false): ");
-        boolean newStatus;
+    private void delete() {
+        int id = InputValidation.validateIntInput("Enter id: ");
         try {
-            newStatus = Boolean.parseBoolean(scanner.nextLine());
-        } catch (Exception e) {
-            System.out.println("Invalid status input. Please enter true or false.");
-            return;
-        }
-
-        try {
-            clueController.updateClueStatus(id, newStatus);
-            System.out.println("Status updated successfully.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error updating status: " + e.getMessage());
-        }
-    }
-
-    private void deleteClue(Scanner scanner) {
-        System.out.print("Enter id: ");
-        int id = scanner.nextInt();
-
-        try {
-            clueController.removeClue(id);
+            clueController.delete(id);
             System.out.println("Clue removed successfully.");
         } catch (IllegalArgumentException e) {
             System.out.println("Error deleting clue: " + e.getMessage());

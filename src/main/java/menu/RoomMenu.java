@@ -1,9 +1,9 @@
 package menu;
 
 import controller.RoomController;
-import enums.DifficultyLevel;
-import enums.Theme;
+import enums.*;
 import model.Room;
+import utils.InputValidation;
 
 import java.util.Scanner;
 
@@ -18,15 +18,9 @@ public class RoomMenu {
         String menu = """
                 \nRoom Menu
                 1. Create room
-                2. Add clues to room
-                3. Add decoration to room
-                4. Show room total price
-                5. Show all rooms
-                6. Show all available rooms
-                7. Update room availability
-                8. Remove clue from room
-                9. Remove decoration from room
-                10. Delete room
+                2. Show room
+                3. Show all rooms
+                6. Delete room
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -34,155 +28,70 @@ public class RoomMenu {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        int choice = -1;
+        int choice;
 
         while (true) {
             showMenu();
-            System.out.print("Enter your choice: ");
 
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> createRoom(scanner);
-                case 2 -> addClueToRoom(scanner);
-                case 3 -> addDecorationToRoom(scanner);
-                case 4 -> showRoomTotalPrice(scanner);
-                case 5 -> showAllRooms();
-                case 6 -> showAllAvailableRooms();
-                case 7 -> updateRoomStatus(scanner);
-                case 8 -> removeClueFromRoom(scanner);
-                case 9 -> removeDecorationFromRoom(scanner);
-                case 10 -> deleteRoom(scanner);
+                case 1 -> create(scanner);
+                case 2 -> read(scanner);
+                case 3 -> readAll();
+                case 6 -> delete(scanner);
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    private void createRoom(Scanner scanner) {
-        System.out.print("Enter room name: ");
-        String name = scanner.nextLine();
+    private void create(Scanner scanner) {
+        String name = InputValidation.validateStringInput("Enter room name: ");
+        double price = InputValidation.validatePriceInput("Enter room price: ");
 
-        System.out.print("Enter room theme (MISTERY, FANTASY, CIFI): ");
+        String themeInput = InputValidation.validateStringInput("Enter room theme (MISTERY, FANTASY, CIFI): ");
         Theme theme;
         try {
-            theme = Theme.valueOf(scanner.nextLine().toUpperCase());
+            theme = Theme.valueOf(themeInput.toUpperCase());
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid theme. Room creation canceled.");
             return;
         }
 
-        System.out.print("Enter room difficulty (EASY, MEDIUM, HARD): ");
+        String difficultyInput = InputValidation.validateStringInput("Enter room difficulty (EASY, MEDIUM, HARD): ");
         DifficultyLevel difficultyLevel;
         try {
-            difficultyLevel = DifficultyLevel.valueOf(scanner.nextLine().toUpperCase());
+            difficultyLevel = DifficultyLevel.valueOf(difficultyInput.toUpperCase());
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid difficulty level. Room creation canceled.");
             return;
         }
 
-        System.out.print("Enter room price: ");
-        double price;
-        try {
-            price = Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price. Room creation canceled.");
-            return;
+        roomController.add(name, price, theme, difficultyLevel);
+    }
+
+    private void read(Scanner scanner) {
+        int id = InputValidation.validateIntInput("Enter room id: ");
+
+        Room room = roomController.getById(id);
+
+        if (room == null) {
+            System.out.println("Clue not found.");
         }
-
-        Room room = new Room(name, theme, difficultyLevel, price);
-        roomController.createRoom(room);
     }
 
-    private void addClueToRoom(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
-
-        System.out.print("Enter clue id: ");
-        int clueId = scanner.nextInt();
-
-        roomController.addClueToRoom(roomId, clueId);
+    private void readAll() {
+        roomController.showAll();
     }
 
-    private void addDecorationToRoom(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
+    private void delete(Scanner scanner) {
+        int id = InputValidation.validateIntInput("Enter room id: ");
 
-        System.out.print("Enter decoration id: ");
-        int decorationId = scanner.nextInt();
-
-        roomController.addDecorationToRoom(roomId, decorationId);
+        roomController.delete(id);
     }
 
-    private void showRoomTotalPrice(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
-        roomController.showRoomTotalPrice(roomId);
-    }
-
-    private void showAllRooms(){
-        roomController.showAllRooms();
-    }
-
-    private void showAllAvailableRooms(){
-        roomController.showAllAvailableRooms();
-    }
-
-    private void updateRoomStatus(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int id = scanner.nextInt();
-
-        System.out.print("Enter new status (true/false): ");
-        boolean available;
-        try {
-            available = Boolean.parseBoolean(scanner.nextLine());
-        } catch (Exception e) {
-            System.out.println("Invalid input. Room status update canceled.");
-            return;
-        }
-
-        roomController.updateRoomStatus(id, available);
-    }
-
-    private void removeClueFromRoom(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
-
-        System.out.print("Enter clue id: ");
-        int clueId = scanner.nextInt();
-
-        roomController.removeClueFromRoom(roomId, clueId);
-    }
-
-    private void removeDecorationFromRoom(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
-
-        System.out.print("Enter decoration name: ");
-        int decorationId = scanner.nextInt();
-
-        roomController.removeDecorationFromRoom(roomId, decorationId);
-    }
-
-    private void deleteRoom(Scanner scanner) {
-        System.out.print("Enter room id: ");
-        int roomId = scanner.nextInt();
-        roomController.deleteRoom(roomId);
-    }
-
-    public void showTotalSalesAmount(){
-        roomController.calculateTotalSalesAmount();
+    public void showTotalSalesAmount() {
+        roomController.showStockInfo();
     }
 }

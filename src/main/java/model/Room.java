@@ -1,37 +1,36 @@
 package model;
 
-import enums.DifficultyLevel;
-import enums.Theme;
+import enums.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Room {
-    private static int counter = 1;
     private int id;
     private String name;
+    private double price;
     private Theme theme;
     private DifficultyLevel difficultyLevel;
-    private double price;
-    private boolean available;
-    private List<Clue> clues;
-    private List<Decoration> decorations;
-    private List<Player> players;
+    private int escapeRoomId;
+    List<Clue> clues;
+    List<Decoration> decorations;
 
+    public Room() {
+    }
 
-    public Room() {}
-
-    public Room(String name, Theme theme, DifficultyLevel difficultyLevel, double price) {
-        this.id = counter++;
+    public Room(String name, double price, Theme theme, DifficultyLevel difficultyLevel) {
         this.name = name;
+        this.price = price;
         this.theme = theme;
         this.difficultyLevel = difficultyLevel;
+    }
+
+    public Room(String name, double price, Theme theme, DifficultyLevel difficultyLevel, int escapeRoomId) {
+        this.name = name;
         this.price = price;
-        this.available = true;
-        this.clues = new ArrayList<>();
-        this.decorations = new ArrayList<>();
-        this.players = new ArrayList<>();
+        this.theme = theme;
+        this.difficultyLevel = difficultyLevel;
+        this.escapeRoomId = escapeRoomId;
     }
 
     public int getId() {
@@ -40,26 +39,24 @@ public class Room {
     public String getName() {
         return name;
     }
+    public double getPrice() {
+        return price;
+    }
     public Theme getTheme() {
         return theme;
     }
     public DifficultyLevel getDifficultyLevel() {
         return difficultyLevel;
     }
-    public double getPrice() {
-        return price;
+    public int getEscapeRoomId() {
+        return escapeRoomId;
     }
-    public boolean isAvailable() {
-        return available;
-    }
+
     public List<Clue> getClues() {
         return clues;
     }
-    public List<Decoration> getDecorations() {
+    public List<Decoration> getDecorations(){
         return decorations;
-    }
-    public List<Player> getPlayers() {
-        return players;
     }
 
     public void setId(int id) {
@@ -68,17 +65,17 @@ public class Room {
     public void setName(String name) {
         this.name = name;
     }
-    public void setTheme(Theme theme) {
-        this.theme = theme;
+    public void setPrice(double price) {
+        this.price = price;
     }
     public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
     }
-    public void setPrice(double price) {
-        this.price = price;
+    public void setTheme(Theme theme) {
+        this.theme = theme;
     }
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setEscapeRoomId(int escapeRoomId) {
+        this.escapeRoomId = escapeRoomId;
     }
     public void setClues(List<Clue> clues) {
         this.clues = clues;
@@ -86,45 +83,26 @@ public class Room {
     public void setDecorations(List<Decoration> decorations) {
         this.decorations = decorations;
     }
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public void addClueToRoom(Clue clue) {
-        if (clue == null) {
-            throw new IllegalArgumentException("Clue cannot be null.");
-        }
-        if (!clues.contains(clue)) {
-            clues.add(clue);
-        }
-    }
-    public void addDecorationToRoom(Decoration decoration) {
-        if (decoration == null) {
-            throw new IllegalArgumentException("Decoration cannot be null.");
-        }
-        if (!decorations.contains(decoration)) {
-            decorations.add(decoration);
-        }
-    }
-
-    public void addPlayerToRoom(Player player) {
-        if (!players.contains(player)) {
-            players.add(player);
-        }
-    }
 
     public double getTotalPrice() {
         return price
-                + clues.stream().mapToDouble(Clue::getPrice).sum()
-                + decorations.stream().mapToDouble(Decoration::getPrice).sum();
+                + (clues == null ? 0 : clues.stream().mapToDouble(Clue::getPrice).sum())
+                + (decorations == null ? 0 : decorations.stream().mapToDouble(Decoration::getPrice).sum());
     }
 
     @Override
     public String toString() {
+        String cluesList = (clues != null && !clues.isEmpty())
+                ? clues.stream().map(Clue::toString).collect(Collectors.joining("\n"))
+                : "None";
+
+        String decorationsList = (decorations != null && !decorations.isEmpty())
+                ? decorations.stream().map(Decoration::toString).collect(Collectors.joining("\n"))
+                : "None";
+
         return String.format(
-                "Room:\n ID: %s | Name: %s | Price: %.2f | Theme: %s | Difficulty: %s | Available: %s", id, name, price, theme, difficultyLevel, available)
-                + "\nClues:\n" + (clues.isEmpty() ? "None" : clues.stream().map(Clue::toString).collect(Collectors.joining("\n")))
-                + "\nDecorations:\n" + (decorations.isEmpty() ? "None" : decorations.stream().map(Decoration::toString).collect(Collectors.joining("\n")))
-                + String.format("\nTotal Price: %.2f", getTotalPrice());
+                "Room: ID: %s | Name: %s | Price: %.2f | Theme: %s | Difficulty: %s%n Clues:%n%s%n Decorations:%n%s%nTotal Price: %.2f%n",
+                id, name, price, theme, difficultyLevel, cluesList, decorationsList, getTotalPrice()
+        );
     }
 }

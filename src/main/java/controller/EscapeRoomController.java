@@ -1,5 +1,6 @@
 package controller;
 
+import exception.GlobalExceptionHandler;
 import model.EscapeRoom;
 import service.EscapeRoomService;
 
@@ -12,52 +13,25 @@ public class EscapeRoomController {
         this.escapeRoomService = escapeRoomService;
     }
 
-    public void createEscapeRoom(EscapeRoom escapeRoom) {
+    public void add(String name) {
         try {
-            escapeRoomService.addEscapeRoom(escapeRoom);
-            System.out.println("Escape Room created successfully.");
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
+            escapeRoomService.create(name);
+            System.out.println("Room Escape added successfully.");
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 
-    public EscapeRoom getEscapeRoomById(int id) {
-        EscapeRoom escapeRoom = escapeRoomService.getEscapeRoomById(id);
-        if (escapeRoom == null) {
-            System.out.println("Escape Room with ID " + id + " not found.");
+    public void showAll() {
+        try {
+            List<EscapeRoom> escapeRooms = escapeRoomService.getAll();
+            if (escapeRooms.isEmpty()) {
+                System.out.println("Please, create an Escape Room first.");
+            } else {
+                escapeRooms.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
-        return escapeRoom;
-    }
-
-    public List<EscapeRoom> getAllEscapeRooms() {
-        List<EscapeRoom> escapeRooms = escapeRoomService.getAllEscapeRooms();
-        if (escapeRooms.isEmpty()) {
-            System.out.println("No Escape Rooms available.");
-        }
-        return escapeRooms;
-    }
-
-    public void updateEscapeRoom(EscapeRoom escapeRoom) {
-        EscapeRoom existingEscapeRoom = escapeRoomService.getEscapeRoomById(escapeRoom.getId());
-        if (existingEscapeRoom == null) {
-            System.out.println("Escape Room with ID " + escapeRoom.getId() + " not found.");
-            return;
-        }
-        escapeRoomService.updateEscapeRoom(escapeRoom);
-        System.out.println("Escape Room updated successfully.");
-    }
-
-    public void deleteEscapeRoom(int id) {
-        EscapeRoom existingEscapeRoom = escapeRoomService.getEscapeRoomById(id);
-        if (existingEscapeRoom == null) {
-            System.out.println("Escape Room with ID " + id + " not found.");
-            return;
-        }
-        escapeRoomService.deleteEscapeRoom(id);
-        System.out.println("Escape Room deleted successfully.");
-    }
-
-    public boolean escapeRoomExists() {
-        return escapeRoomService.escapeRoomExists();
     }
 }

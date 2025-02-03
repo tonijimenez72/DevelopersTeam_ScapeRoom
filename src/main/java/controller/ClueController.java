@@ -1,7 +1,8 @@
 package controller;
 
+import enums.Theme;
+import exception.GlobalExceptionHandler;
 import model.Clue;
-import model.Room;
 import service.ClueService;
 
 import java.util.List;
@@ -13,59 +14,40 @@ public class ClueController {
         this.clueService = clueService;
     }
 
-    public void addClue(Clue clue) {
+    public void add(String name, double price, Theme theme, int roomId) {
         try {
-            clueService.createClue(clue);
-            System.out.println("New clue creaated: " + clue);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error adding clue: " + e.getMessage());
+            clueService.create(name, price, theme, roomId);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 
-    public void showAllClues() {
-        List<Clue> clues = clueService.getAllClues();
-        if (clues.isEmpty()) {
-            System.out.println("None.");
-        } else {
-            clues.forEach(System.out::println);
-        }
-    }
-
-    public void showAllAvailableClues() {
-        List<Clue> clues = clueService.getAvailableClues();
-        int countAvailables = clues.size();
-        if (clues.isEmpty()) {
-            System.out.println("Available clues: None.");
-        } else {
-            System.out.printf("Available clues: %s%n", countAvailables);
-            clues.forEach(System.out::println);
-        }
-    }
-
-    public Clue getClueById(int id) {
+    public void showAll() {
         try {
-            return clueService.getClueById(id);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            return null;
+            List<Clue> clues = clueService.getAll();
+            if (!clues.isEmpty()) {
+                clues.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 
-    public void updateClueStatus(int id, boolean available) {
+    public Clue getById(int id) {
         try {
-            clueService.updateClueStatus(id, available);
-            System.out.println("Updated status for clue.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error updating clue status: " + e.getMessage());
+            return clueService.getById(id);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
+        return null;
     }
 
-    public void removeClue(int id) {
+    public void delete(int id) {
         try {
-            clueService.removeClue(id);
-            System.out.println("Clue removed.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error removing clue: " + e.getMessage());
+            clueService.delete(id);
+            System.out.println("Clue removed successfully.");
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 }
