@@ -5,7 +5,6 @@ import controller.RoomController;
 import utils.InputValidation;
 import model.Decoration;
 
-
 import java.util.Scanner;
 
 public class DecorationMenu {
@@ -75,6 +74,7 @@ public class DecorationMenu {
         int id = InputValidation.validateIntInput("Enter id: ");
         try {
             decorationController.delete(id);
+
             System.out.println("Decoration removed successfully.");
         } catch (IllegalArgumentException e) {
             System.out.println("Error deleting decoration: " + e.getMessage());

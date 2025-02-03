@@ -5,8 +5,7 @@ import controller.RoomController;
 import utils.InputValidation;
 import enums.Theme;
 import model.Clue;
-
-import java.util.Scanner;
+import utils.InputValidation;
 
 public class ClueMenu {
     private final ClueController clueController;
@@ -69,6 +68,7 @@ public class ClueMenu {
     private void read() {
         int id = InputValidation.validateIntInput("Enter id: ");
         Clue clue = clueController.getById(id);
+
         if (clue == null) {
             System.out.println("Clue not found.");
         }

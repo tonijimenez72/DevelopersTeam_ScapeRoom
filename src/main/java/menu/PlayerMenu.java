@@ -69,6 +69,7 @@ public class PlayerMenu {
     private void showAllPlayers() {
         playerController.showAll();
     }
+  
     private void addSubscription() {
         int id = InputValidation.validateIntInput("Enter ID: ");
         playerController.addSubscription(id);

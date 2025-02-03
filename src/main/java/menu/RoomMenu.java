@@ -5,8 +5,6 @@ import enums.*;
 import model.Room;
 import utils.InputValidation;
 
-import java.util.Scanner;
-
 public class RoomMenu {
     private final RoomController roomController;
 
@@ -93,5 +91,9 @@ public class RoomMenu {
 
     public void showTotalSalesAmount() {
         roomController.showStockInfo();
+
+
+    private void showAllRooms() {
+        roomController.showAllRooms();
     }
 }
