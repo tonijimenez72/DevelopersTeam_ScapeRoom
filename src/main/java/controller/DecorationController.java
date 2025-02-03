@@ -1,6 +1,6 @@
 package controller;
 
-import model.Clue;
+import exception.GlobalExceptionHandler;
 import model.Decoration;
 import service.DecorationService;
 
@@ -13,59 +13,39 @@ public class DecorationController {
         this.decorationService = decorationService;
     }
 
-    public void addDecoration(Decoration decoration) {
+    public void add(String name, double price, String material, int roomId) {
         try {
-            decorationService.addDecoration(decoration);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error adding decoration: " + e.getMessage());
+            decorationService.create(name, price, material, roomId);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 
-    public void showAllDecorations() {
-        List<Decoration> decorations = decorationService.getAllDecorations();
-        if (decorations.isEmpty()) {
-            System.out.println("None.");
-        } else {
-            decorations.forEach(System.out::println);
-        }
-    }
-
-    public void showAllAvailableDecorations() {
-        List<Decoration> decorations = decorationService.getAvailableDecorations();
-        int countAvailables = decorations.size();
-        if (decorations.isEmpty()) {
-            System.out.println("Available decorations: None.");
-        } else {
-            System.out.printf("Available decorations: %s%n", countAvailables);
-            decorations.forEach(System.out::println);
-        }
-    }
-
-
-    public Decoration getDecorationById(int id) {
+    public void showAll() {
         try {
-            return decorationService.getDecorationById(id);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-            return null;
+            List<Decoration> decorations = decorationService.getAll();
+            if (!decorations.isEmpty()) {
+                decorations.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 
-    public void updateDecorationStatus(int id, boolean available) {
+    public Decoration getById(int id) {
         try {
-            decorationService.updateDecorationStatus(id, available);
-            System.out.println("Updated status for decoaration.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error updating decoration status: " + e.getMessage());
+            return decorationService.getById(id);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
+        return null;
     }
 
-    public void removeDecoration(int id) {
+    public void delete(int id) {
         try {
-            decorationService.removeDecoration(id);
-            System.out.println("Decoration removed.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error removing decoration: " + e.getMessage());
+            decorationService.delete(id);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleException(e);
         }
     }
 }

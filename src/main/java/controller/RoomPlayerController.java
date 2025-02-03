@@ -1,74 +1,71 @@
 package controller;
 
-import model.Player;
-import model.Room;
+import exception.EntityNotFoundException;
 import service.RoomPlayerService;
 
 import java.util.List;
 
 public class RoomPlayerController {
-
     private final RoomPlayerService roomPlayerService;
 
     public RoomPlayerController(RoomPlayerService roomPlayerService) {
         this.roomPlayerService = roomPlayerService;
     }
 
-    public void addPlayerToRoom(int playerId, int roomId) {
+    public void addPlayerToRoom(int playerId, int roomId, boolean isSolved) {
         try {
-            roomPlayerService.addPlayerToRoom(playerId, roomId);
+            roomPlayerService.addPlayerToRoom(playerId, roomId, isSolved);
+            System.out.println("Player successfully added to the room.");
         } catch (Exception e) {
-            System.out.println("Error adding player to room: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public void endRoomSession(int playerId, int roomId, boolean isSolved) {
+    public void removePlayerFromRoom(int playerId, int roomId) {
+        roomPlayerService.removePlayerFromRoom(playerId, roomId);
+        System.out.println("Player successfully removed from the room.");
+    }
+
+    public void playerPlayedRooms(int playerId) {
         try {
-            roomPlayerService.endRoomSession(playerId, roomId, isSolved);
-        } catch (Exception e) {
-            System.out.println("Error ending room session: " + e.getMessage());
+            List<String> rooms = roomPlayerService.playerPlayedRooms(playerId).stream()
+                    .map(Object::toString)
+                    .toList();
+
+            if (rooms.isEmpty()) {
+                System.out.println("No rooms found for this player.");
+            } else {
+                System.out.println("Rooms played by the player:");
+                rooms.forEach(System.out::println);
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public void showPlayersByRoom(int roomId) {
+    public void roomPlayedByPlayers(int roomId) {
         try {
-            List<Player> players = roomPlayerService.getPlayersByRoom(roomId);
+            List<String> players = roomPlayerService.roomPlayedByPlayers(roomId).stream()
+                    .map(Object::toString)
+                    .toList();
+
             if (players.isEmpty()) {
-                System.out.println("Room available.");
+                System.out.println("No players found for this room.");
             } else {
-                System.out.printf("Session in progress:%n Room ID: %s%n Players: ", roomId);
-                players.forEach(player -> System.out.printf(" Player ID: %s | Name: %s", player.getId(), player.getName()));
+                System.out.println("Players who played in this room:");
+                players.forEach(System.out::println);
             }
-        } catch (Exception e) {
-            System.out.println("Error retrieving players by room: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public void showRoomsPlayedByPlayer(int playerId) {
+    public void playerSolvedRoom(int playerId, int roomId, boolean isSolved) {
         try {
-            List<Room> rooms = roomPlayerService.getRoomsPlayedByPlayer(playerId);
-            if (rooms.isEmpty()) {
-                System.out.printf("Player with ID '%d' has not played any rooms.%n", playerId);
-            } else {
-                System.out.printf("Player ID:%s:%n", playerId);
-                rooms.forEach(room -> System.out.printf("Rooms played:%n ID: %d | Name: %s%n", room.getId(), room.getName()));
-            }
+            roomPlayerService.playerSolvedRoom(playerId, roomId, isSolved);
+            System.out.println("Room completion status updated successfully.");
         } catch (Exception e) {
-            System.out.println("Error retrieving rooms played by player: " + e.getMessage());
-        }
-    }
-
-    public void showRoomsSolvedByPlayer(int playerId) {
-        try {
-            List<Room> rooms = roomPlayerService.getRoomsSolvedByPlayer(playerId);
-            if (rooms.isEmpty()) {
-                System.out.println("Player has not solved any room.");
-            } else {
-                System.out.printf("Player ID: %s:", playerId);
-                rooms.forEach(room -> System.out.printf("%nRooms solved:%n ID: %d | Name: %s%n", room.getId(), room.getName()));
-            }
-        } catch (Exception e) {
-            System.out.println("Error retrieving rooms solved by player: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

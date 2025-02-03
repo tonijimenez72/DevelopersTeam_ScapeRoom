@@ -5,73 +5,72 @@ import utils.InputValidation;
 
 public class RoomPlayerMenu {
     private final RoomPlayerController roomPlayerController;
+    private final Scanner scanner;
 
     public RoomPlayerMenu(RoomPlayerController roomPlayerController) {
         this.roomPlayerController = roomPlayerController;
+        this.scanner = new Scanner(System.in);
     }
 
     public void showMenu() {
         String menu = """
-                \nSession Menu
-                1. Create session
-                2. End session
-                3. Show players by room
-                4. Show rooms by player
-                5. Show rooms solved by player
+                \nRoom Player Menu
+                1. Add player session to a room
+                2. Cancel player session in room
+                3. Show rooms played by a player
+                4. Show players who played in a room
+                5. End player session in room
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
     }
 
     public void run() {
-        int choice = -1;
-
-        while (true) {
+        int choice;
+        do {
             showMenu();
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> addPlayerToRoom();
-                case 2 -> endRoomSession();
-                case 3 -> showPlayersByRoom();
-                case 4 -> showRoomsByPlayer();
-                case 5 -> showRoomsSolvedByPlayer();
-                case 0 -> {
-                    System.out.println("Returning to main menu...");
-                    return;
-                }
+                case 2 -> removePlayerFromRoom();
+                case 3 -> playerPlayedRooms();
+                case 4 -> roomPlayedByPlayers();
+                case 5 -> playerEndsSessionInRoom();
+                case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option. Please try again.");
             }
-        }
+        } while (choice != 0);
     }
 
     private void addPlayerToRoom() {
-        int playerId = InputValidation.validateIntInput("Enter player ID: ");
-        int roomId = InputValidation.validateIntInput("Enter room ID: ");
-        roomPlayerController.addPlayerToRoom(playerId, roomId);
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        boolean isSolved = false;
+
+        roomPlayerController.addPlayerToRoom(playerId, roomId, isSolved);
     }
 
-    private void showPlayersByRoom() {
-        int roomId = InputValidation.validateIntInput("Enter room ID: ");
-        roomPlayerController.showPlayersByRoom(roomId);
+    private void removePlayerFromRoom() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        roomPlayerController.removePlayerFromRoom(playerId, roomId);
     }
 
-    private void showRoomsByPlayer() {
-        int playerId = InputValidation.validateIntInput("Enter player ID: ");
-        roomPlayerController.showRoomsPlayedByPlayer(playerId);
+    private void playerPlayedRooms() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        roomPlayerController.playerPlayedRooms(playerId);
     }
 
-    private void showRoomsSolvedByPlayer() {
-        int playerId = InputValidation.validateIntInput("Enter player ID: ");
-        roomPlayerController.showRoomsSolvedByPlayer(playerId);
+    private void roomPlayedByPlayers() {
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        roomPlayerController.roomPlayedByPlayers(roomId);
     }
 
-    private void endRoomSession() {
-        int playerId = InputValidation.validateIntInput("Enter player ID: ");
-        int roomId = InputValidation.validateIntInput("Enter room ID: ");
-        String response = InputValidation.validateStringInput("Room is solved? (true/false): ");
-        boolean isSolved = Boolean.parseBoolean(response);
-
-        roomPlayerController.endRoomSession(playerId, roomId, isSolved);
+    private void playerEndsSessionInRoom() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        boolean isSolved = InputValidation.validateBooleanInput("Is the room solved? (true/false): ");
+        roomPlayerController.playerSolvedRoom(playerId, roomId, isSolved);
     }
 }

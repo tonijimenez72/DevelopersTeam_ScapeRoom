@@ -1,71 +1,62 @@
 package service.impl;
 
-import dao.Impl.DaoClueImpl;
+import dao.DaoClue;
+import dao.impl.DaoClueImpl;
+import dao.DaoRoom;
+import dao.impl.DaoRoomImpl;
+import enums.Theme;
+import exception.EntityNotFoundException;
+import exception.InvalidEntityDataException;
 import model.Clue;
-import model.Room;
 import service.ClueService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClueServiceImpl implements ClueService {
-    private final List<Clue> clues = new ArrayList<>();
-    private final DaoClueImpl daoClue;
+    private final DaoClue daoClue;
+    private final DaoRoom daoRoom;
 
-    public ClueServiceImpl(){
-
-
-        this.daoClue= new DaoClueImpl();
+    public ClueServiceImpl() {
+        this.daoClue = new DaoClueImpl();
+        this.daoRoom = new DaoRoomImpl();
     }
 
     @Override
-    public void createClue(Clue clue) {
-        if (clue == null) {
-            throw new IllegalArgumentException("Clue cannot be null.");
+    public void create(String name, double price, Theme theme, int roomId) throws InvalidEntityDataException {
+        if (name == null || name.isEmpty()) {
+            throw new InvalidEntityDataException("Invalid clue data: Name cannot be empty.");
         }
-        clues.add(clue);
-        daoClue.addClue(clue);
+        if (price < 0) {
+            throw new InvalidEntityDataException("Invalid clue data: Price cannot be negative.");
+        }
+        if (roomId <= 0 || daoRoom.getById(roomId) == null) {
+            throw new InvalidEntityDataException("Room not found for ID: " + roomId);
+        }
+
+        Clue clue = new Clue(name, price, theme, roomId);
+        daoClue.save(clue);
     }
 
     @Override
-    public List<Clue> getAllClues() {
-        return daoClue.getAllClues();
+    public List<Clue> getAll() {
+        return daoClue.getAll();
     }
 
     @Override
-    public List<Clue> getAvailableClues() {
-        return clues.stream()
-                .filter(Clue::isAvailable)
-                .collect(Collectors.toList());
-    }
-
-
-    @Override
-    public Clue getClueById(int id) {
+    public Clue getById(int id) throws EntityNotFoundException {
         if (id <= 0) {
             throw new IllegalArgumentException("Clue ID must be greater than 0.");
         }
-        return clues.stream()
-                .filter(clue -> clue.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Clue not found for ID: " + id)
-                );
-    }
-
-
-    @Override
-    public void updateClueStatus(int id, boolean available) {
-        Clue clue = getClueById(id);
-        clue.setAvailable(available);
-        daoClue.updateClueAvailability(id,available);
-        System.out.printf("Room status updated to: %s%n", available ? "available" : "not available");
+        Clue clue = daoClue.getById(id);
+        if (clue == null) {
+            throw new EntityNotFoundException("Clue not found for ID: " + id);
+        }
+        return clue;
     }
 
     @Override
-    public void removeClue(int id) {
-        Clue clue = getClueById(id);
-        clues.remove(clue);
-        daoClue.deleteClue(id);
+    public void delete(int id) throws EntityNotFoundException {
+        Clue clue = getById(id);
+        daoClue.remove(clue);
     }
 }

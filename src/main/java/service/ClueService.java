@@ -1,14 +1,15 @@
 package service;
 
+import enums.Theme;
+import exception.EntityNotFoundException;
+import exception.InvalidEntityDataException;
 import model.Clue;
 
 import java.util.List;
 
 public interface ClueService {
-    void createClue(Clue clue);
-    List<Clue> getAllClues();
-    List<Clue> getAvailableClues();
-    Clue getClueById(int id);
-    void updateClueStatus(int id, boolean available);
-    void removeClue(int id);
+    void create(String name, double price, Theme theme, int roomId) throws InvalidEntityDataException;
+    List<Clue> getAll();
+    Clue getById(int id) throws EntityNotFoundException;
+    void delete(int id) throws EntityNotFoundException;
 }

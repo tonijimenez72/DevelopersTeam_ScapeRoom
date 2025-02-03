@@ -1,20 +1,18 @@
 package service;
 
+import enums.DifficultyLevel;
+import enums.Theme;
+import exception.EntityNotFoundException;
+import exception.InvalidEntityDataException;
 import model.Room;
 
 import java.util.List;
 
 public interface RoomService {
-    void createRoom(Room room);
-    void addClueToRoom(int roomId, int clueId);
-    void addDecorationToRoom(int roomId, int clueId);
-    List<Room> getAllRooms();
-    List<Room> getAvailableRooms();
-    Room getRoomById(int id);
-    void updateRoomStatus(int id, boolean available);
-    void removeClueFromRoom(int roomId, int clueId);
-    void removeDecorationFromRoom(int roomId, int clueId);
-    void deleteRoom(int id);
-    double calculateRoomTotalPrice(Room room);
-    double calculateTotalSalesAmount();
+    void create(String name, double price, Theme theme, DifficultyLevel difficultyLevel) throws InvalidEntityDataException;
+    List<Room> getAll();
+    Room getById(int id) throws EntityNotFoundException;
+    void delete(int id) throws EntityNotFoundException;
+    double calculateTotalStockValue();
+    void showStockInfo();
 }

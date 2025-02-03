@@ -1,30 +1,14 @@
 package dao;
 
-import model.Player;
-import model.Room;
+import model.RoomPlayer;
 
 import java.util.List;
 
-public interface DaoRoomPlayer  {
-
-
-    void safe ( Player player, Room room);
-
-    List<int[]> getAll();
-
-
-
-
-
-
-
-
-    //void remove (Player player, Room room);
-    /*void addPlayerRoomRelation(int idPlayer, int idRoom);
-
-    List<int[]> getAllPlayerRoomRelations();
-
-    void updatePlayerRoomRelation(int oldPlayerId, int oldRoomId, int newPlayerId, int newRoomId);
-
-    void deletePlayerRoomRelation(int playerId, int roomId);*/
+public interface DaoRoomPlayer extends GenericDao<RoomPlayer> {
+    void save(RoomPlayer roomPlayer);
+    RoomPlayer getById(int id);
+    List<RoomPlayer> getAll();
+    void remove(RoomPlayer roomPlayer);
+    List<RoomPlayer> getPlayersByRoomId(int roomId);
+    List<RoomPlayer> getRoomsByPlayerId(int playerId);
 }

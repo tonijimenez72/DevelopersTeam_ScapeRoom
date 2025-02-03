@@ -4,15 +4,9 @@ import model.EscapeRoom;
 
 import java.util.List;
 
-public interface DaoEscapeRoom extends GenericDao<EscapeRoom> {
-
-
-
-
-
-
-    /*void addEscapeRoom(EscapeRoom escapeRoom);
-    List<EscapeRoom> getAllEscapeRooms();
-    void updateEscapeRoom(EscapeRoom escapeRoom);
-    void deleteEscapeRoom(int id);*/
+public interface DaoEscapeRoom {
+    void save(EscapeRoom escapeRoom);
+    EscapeRoom getById(int id);
+    List<EscapeRoom> getAll();
+    int count();
 }
