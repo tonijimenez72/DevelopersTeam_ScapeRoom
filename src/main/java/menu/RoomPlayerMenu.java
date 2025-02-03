@@ -3,8 +3,6 @@ package menu;
 import controller.RoomPlayerController;
 import utils.InputValidation;
 
-import java.util.Scanner;
-
 public class RoomPlayerMenu {
     private final RoomPlayerController roomPlayerController;
     private final Scanner scanner;
