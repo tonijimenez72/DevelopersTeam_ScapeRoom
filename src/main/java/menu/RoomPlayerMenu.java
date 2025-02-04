@@ -5,11 +5,9 @@ import utils.InputValidation;
 
 public class RoomPlayerMenu {
     private final RoomPlayerController roomPlayerController;
-    private final Scanner scanner;
 
     public RoomPlayerMenu(RoomPlayerController roomPlayerController) {
         this.roomPlayerController = roomPlayerController;
-        this.scanner = new Scanner(System.in);
     }
 
     public void showMenu() {

@@ -25,7 +25,6 @@ public class RoomMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice;
 
         while (true) {
@@ -34,17 +33,17 @@ public class RoomMenu {
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> create(scanner);
-                case 2 -> read(scanner);
+                case 1 -> create();
+                case 2 -> read();
                 case 3 -> readAll();
-                case 6 -> delete(scanner);
+                case 6 -> delete();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
-    private void create(Scanner scanner) {
+    private void create() {
         String name = InputValidation.validateStringInput("Enter room name: ");
         double price = InputValidation.validatePriceInput("Enter room price: ");
 
@@ -69,7 +68,7 @@ public class RoomMenu {
         roomController.add(name, price, theme, difficultyLevel);
     }
 
-    private void read(Scanner scanner) {
+    private void read() {
         int id = InputValidation.validateIntInput("Enter room id: ");
 
         Room room = roomController.getById(id);
@@ -83,7 +82,7 @@ public class RoomMenu {
         roomController.showAll();
     }
 
-    private void delete(Scanner scanner) {
+    private void delete() {
         int id = InputValidation.validateIntInput("Enter room id: ");
 
         roomController.delete(id);
@@ -91,9 +90,5 @@ public class RoomMenu {
 
     public void showTotalSalesAmount() {
         roomController.showStockInfo();
-
-
-    private void showAllRooms() {
-        roomController.showAllRooms();
     }
 }

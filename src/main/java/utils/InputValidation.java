@@ -21,8 +21,8 @@ public class InputValidation {
                 valid = true;
             } else {
                 System.out.println("Invalid input. Please enter an integer.");
-                scanner.next();
             }
+            scanner.nextLine();
         }
         return input;
     }
