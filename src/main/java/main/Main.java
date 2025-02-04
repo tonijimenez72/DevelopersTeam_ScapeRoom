@@ -7,6 +7,7 @@ import service.impl.*;
 
 public class Main {
     public static void main(String[] args) {
+
         ClueService clueService = new ClueServiceImpl();
         DecorationService decorationService = new DecorationServiceImpl();
         RoomService roomService = new RoomServiceImpl(clueService, decorationService);
