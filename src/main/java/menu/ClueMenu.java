@@ -7,6 +7,8 @@ import enums.Theme;
 import model.Clue;
 import utils.InputValidation;
 
+import java.util.Scanner;
+
 public class ClueMenu {
     private final ClueController clueController;
     private final RoomController roomController;
@@ -29,7 +31,6 @@ public class ClueMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice;
 
         while (true) {

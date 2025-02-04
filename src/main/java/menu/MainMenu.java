@@ -44,7 +44,6 @@ public class MainMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice;
 
         while (true) {
