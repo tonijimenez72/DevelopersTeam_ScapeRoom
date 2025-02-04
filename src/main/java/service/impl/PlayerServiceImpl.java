@@ -1,89 +1,107 @@
 package service.impl;
 
-import dao.Impl.DaoPlayerImpl;
+import dao.DaoEscapeRoom;
+import dao.DaoPlayer;
+import dao.impl.DaoEscapeRoomImpl;
+import dao.impl.DaoPlayerImpl;
+import exception.EntityNotFoundException;
+import exception.InvalidEntityDataException;
+import model.EscapeRoom;
 import model.Player;
 import service.PlayerService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerServiceImpl implements PlayerService {
+    private final DaoPlayer daoPlayer;
+    private final DaoEscapeRoom daoEscapeRoom;
 
-    private final List<Player> players = new ArrayList<>();
-    private final DaoPlayerImpl daoPlayer;
-
-    public PlayerServiceImpl (){
-
-        this.daoPlayer=new DaoPlayerImpl();
-
+    public PlayerServiceImpl() {
+        this.daoPlayer = new DaoPlayerImpl();
+        this.daoEscapeRoom = new DaoEscapeRoomImpl();
     }
 
     @Override
-    public void createPlayer(Player player) {
+    public void create(String name, String email) throws InvalidEntityDataException {
+        List<EscapeRoom> escapeRooms = daoEscapeRoom.getAll();
+        if (escapeRooms.isEmpty()) {
+            throw new InvalidEntityDataException("Cannot create a player. Must create an Escape Room first.");
+        }
+
+        if (name == null || name.isEmpty() || email == null || email.isEmpty()) {
+            throw new InvalidEntityDataException("Invalid player data: Name and Email cannot be empty.");
+        }
+
+        int escapeRoomId = escapeRooms.get(0).getId();
+
+        Player player = new Player(name, email, escapeRoomId);
+        daoPlayer.save(player);
+    }
+
+    @Override
+    public List<Player> getAll() {
+        return daoPlayer.getAll();
+    }
+
+    @Override
+    public Player getById(int id) throws EntityNotFoundException {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Player ID must be greater than 0.");
+        }
+        Player player = daoPlayer.getById(id);
         if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null.");
+            throw new EntityNotFoundException("Player not found for ID: " + id);
         }
-        if (player.getName() == null || player.getName().isBlank() || player.getEmail() == null || player.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Player name and email cannot be null or blank.");
-        }
-
-        players.add(player);
-        daoPlayer.addPlayer(player);
-        System.out.println("Player created.");
+        return player;
     }
 
     @Override
-    public Player getPlayerById(int id) {
-        return players.stream()
-                .filter(player -> player.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Player not found."));
-    }
-
-    @Override
-    public List<Player> getAllPlayers() {
-
-        return daoPlayer.getAllPlayers();
+    public void delete(int id) throws EntityNotFoundException {
+        Player player = getById(id);
+        daoPlayer.remove(player);
     }
 
     @Override
     public void addSubscription(int id) {
-        Player player = getPlayerById(id);
-        if (!player.isSubscriber()) {
-            player.setSubscriber(true);
-            daoPlayer.addSubscriber(id);
-            System.out.println("Player subscribed to notifications.");
-        } else {
-            System.out.println("Player is already subscribed");
+        try {
+            Player player = getById(id);
+            if (!player.isSubscriber()) {
+                player.setSubscriber(true);
+                daoPlayer.save(player);
+                System.out.println("Player subscribed to notifications.");
+            } else {
+                System.out.println("Player is already subscribed.");
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
     @Override
     public void deleteSubscription(int id) {
-        Player player = getPlayerById(id);
-        if (player.isSubscriber()) {
-            player.setSubscriber(false);
-            daoPlayer.deleteSubscriber(id);
-            System.out.println("Player unsubscribed from notifications.");
-        } else {
-            System.out.println("Player is not subscribed.");
+        try {
+            Player player = getById(id);
+
+            if (player.isSubscriber()) {
+                player.setSubscriber(false);
+                daoPlayer.save(player);
+            } else {
+                System.out.println("Player is not subscribed.");
+            }
+        } catch (EntityNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
+
     @Override
     public List<Player> getAllSubscribers() {
+        List<Player> players = daoPlayer.getAll();
+
         return players.stream()
                 .filter(Player::isSubscriber)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void deletePlayer(int id) {
-        Player player = getPlayerById(id);
-        players.remove(player);
-        daoPlayer.deletePlayer(id);
-        System.out.println("Player removed.");
     }
 
     @Override

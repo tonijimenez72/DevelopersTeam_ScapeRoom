@@ -4,10 +4,9 @@ import model.Player;
 
 import java.util.List;
 
-public interface DaoPlayer {
-
-    void addPlayer(Player player);
-    List<Player> getAllPlayers();
-    void updatePlayer(Player player);
-    void deletePlayer(int idPlayer);
+public interface DaoPlayer extends GenericDao<Player> {
+    void save(Player player);
+    List<Player> getAll();
+    Player getById(int id);
+    void remove(Player player);
 }

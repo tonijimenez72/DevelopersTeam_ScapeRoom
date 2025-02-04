@@ -4,13 +4,9 @@ import model.Room;
 
 import java.util.List;
 
-public interface DaoRoom {
-
-    void addRoom(Room room);
-    List<Room> getAllRooms();
-    void updateRoom(Room room);
-    void deleteRoom(int id);
-    void addRoomToEscapeRoom(Room room, int escapeRoomId);
-    void updateRoomAvailability(int idRoom, boolean isAvailable);
-
+public interface DaoRoom extends GenericDao<Room>{
+    void save(Room room);
+    List<Room> getAll();
+    Room getById(int id);
+    void remove(Room room);
 }

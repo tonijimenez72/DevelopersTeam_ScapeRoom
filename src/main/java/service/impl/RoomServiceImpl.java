@@ -1,161 +1,76 @@
 package service.impl;
 
-import dao.Impl.DaoClueImpl;
-import dao.Impl.DaoDecorationImpl;
-import dao.Impl.DaoRoomImpl;
-import model.Clue;
-import model.Decoration;
-import model.Room;
-import service.ClueService;
-import service.DecorationService;
+import dao.DaoEscapeRoom;
+import dao.DaoRoom;
+import dao.DaoClue;
+import dao.DaoDecoration;
+import dao.impl.DaoEscapeRoomImpl;
+import dao.impl.DaoRoomImpl;
+import dao.impl.DaoClueImpl;
+import dao.impl.DaoDecorationImpl;
+import enums.*;
+import exception.EntityNotFoundException;
+import exception.InvalidEntityDataException;
+import model.*;
 import service.RoomService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RoomServiceImpl implements RoomService {
+    private final DaoRoom daoRoom;
+    private final DaoEscapeRoom daoEscapeRoom;
+    private final DaoClue daoClue;
+    private final DaoDecoration daoDecoration;
 
-    private final List<Room> rooms = new ArrayList<>();
-    private final ClueService clueService;
-    private final DecorationService decorationService;
-    private  final DaoRoomImpl daoRoom;
-    private  final DaoClueImpl daoClue;
-    private  final DaoDecorationImpl daoDecoration;
-
-
-
-
-    public RoomServiceImpl(ClueService clueService, DecorationService decorationService) {
-
-        this.clueService = clueService;
-        this.decorationService = decorationService;
+    public RoomServiceImpl() {
         this.daoRoom = new DaoRoomImpl();
+        this.daoEscapeRoom = new DaoEscapeRoomImpl();
         this.daoClue = new DaoClueImpl();
-        this.daoDecoration= new DaoDecorationImpl();
+        this.daoDecoration = new DaoDecorationImpl();
     }
 
     @Override
-    public void createRoom(Room room) {
-        if (room == null) {
-            throw new IllegalArgumentException("Room cannot be null.");
+    public void create(String name, double price, Theme theme, DifficultyLevel difficultyLevel) throws InvalidEntityDataException {
+        List<EscapeRoom> escapeRooms = daoEscapeRoom.getAll();
+        int escapeRoomId = escapeRooms.get(0).getId();
+
+        if (escapeRooms.isEmpty()) {
+            throw new InvalidEntityDataException("Cannot create a room. Must create an escape room first.");
         }
-        rooms.add(room);
-        daoRoom.addRoom(room);
-        System.out.println("Room added: " + room.getName());
-    }
-
-    @Override
-    public void addClueToRoom(int roomId, int clueId) {
-        Room room = getRoomById(roomId);
-        Clue clue = clueService.getClueById(clueId);
-
-        if (!clue.isAvailable()) {
-            throw new IllegalStateException("Clue is not available: ID " + clueId);
+        if (name == null || name.isEmpty() || price < 0) {
+            throw new InvalidEntityDataException("Invalid room data: Name cannot be empty and price cannot be negative.");
         }
 
-        room.addClueToRoom(clue);
-        daoClue.addClueToRoom(clueId,roomId);
-        clue.setAvailable(false);
-
+        Room room = new Room(name, price, theme, difficultyLevel, escapeRoomId);
+        daoRoom.save(room);
     }
 
     @Override
-    public void addDecorationToRoom(int roomId, int decorationId) {
-        Room room = getRoomById(roomId);
-        Decoration decoration = decorationService.getDecorationById(decorationId);
-
-        if (!decoration.isAvailable()) {
-            throw new IllegalStateException("Decoration is not available: ID " + decorationId);
-        }
-
-        room.addDecorationToRoom(decoration);
-        daoDecoration.addDecoToRoom(decorationId,roomId);
-        decoration.setAvailable(false);
+    public List<Room> getAll() {
+        return daoRoom.getAll();
     }
 
     @Override
-    public List<Room> getAllRooms() {
-        return daoRoom.getAllRooms();
-    }
-
-    @Override
-    public List<Room> getAvailableRooms() {
-        return rooms.stream()
-                .filter(Room::isAvailable)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Room getRoomById(int id) {
+    public Room getById(int id) throws EntityNotFoundException {
         if (id <= 0) {
-            throw new IllegalArgumentException("Room cannot be null.");
+            throw new IllegalArgumentException("Room ID must be greater than 0.");
         }
-        return rooms.stream()
-                .filter(clue -> clue.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Room not found."));
-    }
-
-    public void updateRoomStatus(int idRoom, boolean available) {
-        Room room = getRoomById(idRoom);
-        room.setAvailable(available);
-        daoRoom.updateRoomAvailability(idRoom,available);
-    }
-
-    @Override
-    public void removeClueFromRoom(int roomId, int clueId) {
-        Room room = getRoomById(roomId);
-        Clue clue = room.getClues().stream()
-                .filter(c -> c.getId() == clueId)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Clue not found in room: ID " + clueId));
-
-        room.getClues().remove(clue);
-        clue.setAvailable(true);
-        daoClue.removeClueFromRoom(clueId);
-    }
-
-    @Override
-    public void removeDecorationFromRoom(int roomId, int decorationId) {
-        Room room = getRoomById(roomId);
-        Decoration decoration = room.getDecorations().stream()
-                .filter(d -> d.getId() == decorationId)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Decoration not found in room: ID " + decorationId));
-
-        room.getDecorations().remove(decoration);
-        decoration.setAvailable(true);
-        daoDecoration.removeDecorationFromRoom(decorationId);
-    }
-
-    @Override
-    public void deleteRoom(int id) {
-        Room room = getRoomById(id);
-        rooms.remove(room);
-        daoRoom.deleteRoom(id);
-        System.out.println("Room deleted.");
-    }
-
-    @Override
-    public double calculateRoomTotalPrice(Room room) {
+        Room room = daoRoom.getById(id);
         if (room == null) {
-            throw new IllegalArgumentException("Room cannot be null.");
+            throw new EntityNotFoundException("Clue not found for ID: " + id);
         }
-        double totalCluePrice = room.getClues().stream()
-                .mapToDouble(Clue::getPrice)
-                .sum();
-
-        double totalDecorationPrice = room.getDecorations().stream()
-                .mapToDouble(Decoration::getPrice)
-                .sum();
-
-        return room.getPrice() + totalCluePrice + totalDecorationPrice;
+        return room;
     }
 
     @Override
-    public double calculateTotalSalesAmount() {
-        return getAllRooms().stream()
+    public void delete(int id) throws EntityNotFoundException {
+        Room room = getById(id);
+        daoRoom.remove(room);
+    }
+
+    @Override
+    public double calculateTotalStockValue() {
+        return getAll().stream()
                 .mapToDouble(room ->
                         room.getPrice() +
                                 room.getClues().stream().mapToDouble(Clue::getPrice).sum() +
@@ -163,4 +78,18 @@ public class RoomServiceImpl implements RoomService {
                 )
                 .sum();
     }
+
+    public void showStockInfo() {
+        List<Room> rooms = daoRoom.getAll();
+        List<Clue> clues = daoClue.getAll();
+        List<Decoration> decorations = daoDecoration.getAll();
+
+        int totalRooms = rooms.size();
+        int totalClues = clues.size();
+        int totalDecorations = decorations.size();
+
+        System.out.printf("%nEscape Room Stock Info:%n Total Rooms: %s | Total Clues: %s | Total Decorations: %s | Total Value: %.2f%n", totalRooms, totalClues, totalDecorations, calculateTotalStockValue() );
+    }
+
+
 }

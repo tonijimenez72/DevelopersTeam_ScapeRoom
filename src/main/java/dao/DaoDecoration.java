@@ -1,15 +1,14 @@
 package dao;
 
 import model.Decoration;
-import model.Room;
 
 import java.util.List;
 
-public interface DaoDecoration {
+public interface DaoDecoration extends GenericDao<Decoration>{
 
-    void insertDecoration(Decoration decoration);
-    List<Decoration> getAllDecorations();
-    void updateDecoration(Decoration decoration);
-    void deleteDecoration(int idDecoration);
-    void addDecoToRoom(int idDecoration, int idRoom);
+    void save(Decoration decoration);
+    List<Decoration> getAll();
+    Decoration getById(int id);
+    void remove(Decoration decoration);
+
 }

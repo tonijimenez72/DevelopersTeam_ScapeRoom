@@ -1,40 +1,18 @@
 package model;
 
-public class Decoration extends RoomElement{
-    private static int counter = 1;
-    private int id;
+public class Decoration extends RoomElement {
     private String material;
-    private int roomId;
-
 
     public Decoration() {}
 
-    public Decoration(String name, double price, String material) {
-        super(name, price);
-        this.id = counter++;
+    public Decoration(String name, double price, String material, int roomId) {
+        super(name, price, roomId);
         this.material = material;
     }
 
-    public int getRoomId() {
-        return roomId;
-    }
-
-
-    public int getId() {
-        return id;
-    }
     public String getMaterial() {
         return material;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setRoomId(int roomId) {
-        this.roomId = roomId;
-    }
-
 
     public void setMaterial(String material) {
         this.material = material;
@@ -42,6 +20,6 @@ public class Decoration extends RoomElement{
 
     @Override
     public String toString() {
-        return String.format(" ID: %s Name: %s | Price: %.2f | Theme: %s | Available: %s", id, super.getName(), super.getPrice(), material, super.isAvailable());
+        return String.format(" ID: %S | Name: %s | Price: %.2f | Material: %s", super.getId(), super.getName(), super.getPrice(), material);
     }
 }

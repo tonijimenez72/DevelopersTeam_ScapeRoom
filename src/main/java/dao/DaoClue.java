@@ -1,19 +1,14 @@
 package dao;
 
 import model.Clue;
-import model.Room;
 
 import java.util.List;
 
-public interface DaoClue {
+public interface DaoClue extends GenericDao<Clue>{
 
-    void addClue(Clue clue);
+    void save(Clue clue);
+    List<Clue> getAll();
+    Clue getById(int id);
+    void remove(Clue clue);
 
-    List<Clue> getAllClues();
-
-    void updateClue(Clue clue);
-
-    void deleteClue(int idClue);
-
-    void addClueToRoom(int idClue, int idRoom);
 }

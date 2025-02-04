@@ -1,16 +1,14 @@
 package model;
 
 public class EscapeRoom {
-    private static final String SCAPE_ROOM_NAME = "IT Scape Room";
     private int id;
     private String name;
 
     public EscapeRoom() {
     }
 
-    public EscapeRoom(int id,String name) {
-        this.name = SCAPE_ROOM_NAME;
-        this.id=id;
+    public EscapeRoom(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -29,8 +27,6 @@ public class EscapeRoom {
 
     @Override
     public String toString() {
-        return "EscapeRoom{" +
-                ", name='" + name + '\'' +
-                '}';
+        return String.format("Escape Room: %s%n", name);
     }
 }

@@ -18,11 +18,10 @@ public class InputValidation {
             System.out.print(prompt);
             if (scanner.hasNextInt()) {
                 input = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character left after nextInt()
                 valid = true;
             } else {
                 System.out.println("Invalid input. Please enter an integer.");
-                scanner.next(); // Clear the buffer
+                scanner.next();
             }
         }
         return input;
@@ -34,7 +33,7 @@ public class InputValidation {
 
         while (!valid) {
             System.out.print(prompt);
-            input = scanner.nextLine().trim(); // Get the input and remove leading/trailing spaces
+            input = scanner.nextLine().trim();
 
             if (!input.isEmpty()) {
                 valid = true;
@@ -45,6 +44,40 @@ public class InputValidation {
         return input;
     }
 
+    public static boolean validateBooleanInput(String prompt) {
+        while (true) {
+            System.out.print(prompt + " (true/false): ");
+            String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("true")) {
+                return true;
+            } else if (input.equals("false")) {
+                return false;
+            } else {
+                System.out.println("Invalid input. Please enter 'true' or 'false'.");
+            }
+        }
+    }
+
+    public static int validateIdInput(String prompt) {
+        int input;
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextInt()) {
+                input = scanner.nextInt();
+                scanner.nextLine();
+                if (input > 0) {
+                    return input;
+                } else {
+                    System.out.println("Invalid input. ID must be greater than zero.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a positive integer.");
+                scanner.next();
+            }
+        }
+    }
+
     public static String validateEmailInput(String prompt) {
         String input = "";
         boolean valid = false;
@@ -53,7 +86,7 @@ public class InputValidation {
             System.out.print(prompt);
             input = scanner.nextLine().trim();
 
-            if (validateEmail(input)) { // Reuse the static validation method
+            if (validateEmail(input)) {
                 valid = true;
             } else {
                 System.out.println("Invalid email format. Please enter a valid email.");
@@ -84,11 +117,10 @@ public class InputValidation {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid price.");
-                scanner.next(); // Clear the buffer
+                scanner.next();
             }
         }
 
-        // Round to 2 decimal places
         price = Math.round(price * 100.0) / 100.0;
         return price;
     }

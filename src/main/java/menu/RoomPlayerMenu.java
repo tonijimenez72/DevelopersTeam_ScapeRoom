@@ -1,135 +1,76 @@
 package menu;
 
 import controller.RoomPlayerController;
-
-import java.util.Scanner;
+import utils.InputValidation;
 
 public class RoomPlayerMenu {
     private final RoomPlayerController roomPlayerController;
+    private final Scanner scanner;
 
     public RoomPlayerMenu(RoomPlayerController roomPlayerController) {
         this.roomPlayerController = roomPlayerController;
+        this.scanner = new Scanner(System.in);
     }
 
     public void showMenu() {
         String menu = """
-                \nSession Menu
-                1. Create session
-                2. End session
-                3. Show players by room
-                4. Show rooms by player
-                5. Show rooms solved by player
+                \nRoom Player Menu
+                1. Add player session to a room
+                2. Cancel player session in room
+                3. Show rooms played by a player
+                4. Show players who played in a room
+                5. End player session in room
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
     }
 
     public void run() {
-        int choice= -1;
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
+        int choice;
+        do {
             showMenu();
-            System.out.print("Enter your choice: ");
-
-            try {
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                } else {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next();
-                    continue;
-                }
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                continue;
-            }
+            choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> addPlayerToRoom(scanner);
-                case 2 -> endRoomSession(scanner);
-                case 3 -> showPlayersByRoom(scanner);
-                case 4 -> showRoomsByPlayer(scanner);
-                case 5 -> showRoomsSolvedByPlayer(scanner);
-                case 0 -> {
-                    System.out.println("Returning to main menu...");
-                    return;
-                }
+                case 1 -> addPlayerToRoom();
+                case 2 -> removePlayerFromRoom();
+                case 3 -> playerPlayedRooms();
+                case 4 -> roomPlayedByPlayers();
+                case 5 -> playerEndsSessionInRoom();
+                case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option. Please try again.");
             }
-        }
+        } while (choice != 0);
     }
 
-    private void addPlayerToRoom(Scanner scanner) {
-        try {
-            System.out.print("Enter player ID: ");
-            int playerId = scanner.nextInt();
-            System.out.print("Enter room ID: ");
-            int roomId = scanner.nextInt();
-            roomPlayerController.addPlayerToRoom(playerId, roomId);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter valid numeric IDs.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private void addPlayerToRoom() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        boolean isSolved = false;
+
+        roomPlayerController.addPlayerToRoom(playerId, roomId, isSolved);
     }
 
-    private void showPlayersByRoom(Scanner scanner) {
-        try {
-            System.out.print("Enter room ID: ");
-            int roomId = scanner.nextInt();
-            roomPlayerController.showPlayersByRoom(roomId);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid room ID.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private void removePlayerFromRoom() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        roomPlayerController.removePlayerFromRoom(playerId, roomId);
     }
 
-    private void showRoomsByPlayer(Scanner scanner) {
-        try {
-            System.out.print("Enter player ID: ");
-            int playerId = scanner.nextInt();
-            roomPlayerController.showRoomsPlayedByPlayer(playerId);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid player ID.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private void playerPlayedRooms() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        roomPlayerController.playerPlayedRooms(playerId);
     }
 
-    private void showRoomsSolvedByPlayer(Scanner scanner) {
-        try {
-            System.out.print("Enter player ID: ");
-            int playerId = scanner.nextInt();
-            roomPlayerController.showRoomsSolvedByPlayer(playerId);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid player ID.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private void roomPlayedByPlayers() {
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        roomPlayerController.roomPlayedByPlayers(roomId);
     }
 
-    private void endRoomSession(Scanner scanner) {
-        String response;
-        boolean isSolved;
-
-        try {
-            System.out.print("Enter player ID: ");
-            int playerId = scanner.nextInt();
-            System.out.print("Enter room ID: ");
-            int roomId = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("Room is solved? (true/false): ");
-            response = scanner.nextLine().toLowerCase();
-            isSolved = Boolean.parseBoolean(response);
-
-            roomPlayerController.endRoomSession(playerId, roomId, isSolved);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter valid numeric IDs or a boolean value.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private void playerEndsSessionInRoom() {
+        int playerId = InputValidation.validateIdInput("Enter Player ID: ");
+        int roomId = InputValidation.validateIdInput("Enter Room ID: ");
+        boolean isSolved = InputValidation.validateBooleanInput("Is the room solved? (true/false): ");
+        roomPlayerController.playerSolvedRoom(playerId, roomId, isSolved);
     }
 }

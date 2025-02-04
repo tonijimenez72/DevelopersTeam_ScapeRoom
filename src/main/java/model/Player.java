@@ -2,30 +2,22 @@ package model;
 
 import utils.NotificationObserver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player implements NotificationObserver {
     private static int counter = 1;
     private int id;
     private String name;
     private String email;
     private boolean subscriber;
-    private List<Room> playedRooms;
-    private List<Room> solvedRooms;
+    private int escapeRoomId;
 
     public Player(){
-
-
     }
 
-     public Player(String name, String email) {
-        this.id = counter++;
+    public Player(String name, String email, int escapeRoomId) {
         this.name = name;
         this.email = email;
         this.subscriber = false;
-        this.playedRooms = new ArrayList<>();
-        this.solvedRooms = new ArrayList<>();
+        this.escapeRoomId = escapeRoomId;
     }
 
     public int getId() {
@@ -40,12 +32,10 @@ public class Player implements NotificationObserver {
     public boolean isSubscriber() {
         return subscriber;
     }
-    public List<Room> getPlayedRooms() {
-        return new ArrayList<>(playedRooms);
+    public int getEscapeRoomId() {
+        return escapeRoomId;
     }
-    public List<Room> getSolvedRooms() {
-        return new ArrayList<>(solvedRooms);
-    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -58,23 +48,8 @@ public class Player implements NotificationObserver {
     public void setSubscriber(boolean subscriber) {
         this.subscriber = subscriber;
     }
-
-    public void addPlayedRoom(Room room) {
-        if (room == null) {
-            throw new IllegalArgumentException("Room cannot be null.");
-        }
-        if (!playedRooms.contains(room)) {
-            playedRooms.add(room);
-        }
-    }
-
-    public void addSolvedRoom(Room room) {
-        if (room == null) {
-            throw new IllegalArgumentException("Room cannot be null.");
-        }
-        if (!solvedRooms.contains(room)) {
-            solvedRooms.add(room);
-        }
+    public void setEscapeRoomId(int escapeRoomId) {
+        this.escapeRoomId = escapeRoomId;
     }
 
     @Override
@@ -86,10 +61,6 @@ public class Player implements NotificationObserver {
 
     @Override
     public String toString() {
-        String playedRoomsNames = playedRooms.isEmpty() ? "None" : String.join(", ", playedRooms.stream().map(Room::getName).toList());
-        String solvedRoomsNames = solvedRooms.isEmpty() ? "None" : String.join(", ", solvedRooms.stream().map(Room::getName).toList());
-
-        return String.format("Player:%n Name: %s | Email: %s | Subscriber: %s%n Played Rooms:%n %s%nSolved Rooms%n %s",
-                name, email, subscriber, playedRoomsNames, solvedRoomsNames);
+        return String.format("Player:%n Name: %s | Email: %s | Subscriber: %s%n", name, email, subscriber);
     }
 }
