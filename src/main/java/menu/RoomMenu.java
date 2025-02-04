@@ -46,24 +46,8 @@ public class RoomMenu {
     private void create() {
         String name = InputValidation.validateStringInput("Enter room name: ");
         double price = InputValidation.validatePriceInput("Enter room price: ");
-
-        String themeInput = InputValidation.validateStringInput("Enter room theme (MISTERY, FANTASY, CIFI): ");
-        Theme theme;
-        try {
-            theme = Theme.valueOf(themeInput.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid theme. Room creation canceled.");
-            return;
-        }
-
-        String difficultyInput = InputValidation.validateStringInput("Enter room difficulty (EASY, MEDIUM, HARD): ");
-        DifficultyLevel difficultyLevel;
-        try {
-            difficultyLevel = DifficultyLevel.valueOf(difficultyInput.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid difficulty level. Room creation canceled.");
-            return;
-        }
+        Theme theme = InputValidation.validateEnumInput("Select a theme: ", Theme.class);
+        DifficultyLevel difficultyLevel = InputValidation.validateEnumInput("Select a difficulty level: ", DifficultyLevel.class);
 
         roomController.add(name, price, theme, difficultyLevel);
     }
