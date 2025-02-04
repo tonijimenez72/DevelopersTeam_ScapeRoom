@@ -22,7 +22,7 @@ class RoomServiceTest {
 
     @Test
     void testCreateRoomSuccess() {
-        assertDoesNotThrow(() -> roomService.create("Test Room", 50.0, Theme.CIFI, DifficultyLevel.HARD));
+        assertDoesNotThrow(() -> roomService.create("Test Room", 50.0, Theme.SCIFI, DifficultyLevel.HARD));
 
         List<Room> rooms = roomService.getAll();
         assertFalse(rooms.isEmpty(), "Room list must be not empty.");
@@ -31,16 +31,16 @@ class RoomServiceTest {
 
     @Test
     void testCreateRoomInvalidData() {
-        assertThrows(InvalidEntityDataException.class, () -> roomService.create("", 10.0, Theme.CIFI, DifficultyLevel.HARD),
+        assertThrows(InvalidEntityDataException.class, () -> roomService.create("", 10.0, Theme.SCIFI, DifficultyLevel.HARD),
                 "Throws InvalidEntityDataException if name is empty.");
 
-        assertThrows(InvalidEntityDataException.class, () -> roomService.create("Test Room", -10.0, Theme.CIFI, DifficultyLevel.MEDIUM),
+        assertThrows(InvalidEntityDataException.class, () -> roomService.create("Test Room", -10.0, Theme.SCIFI, DifficultyLevel.MEDIUM),
                 "Throws InvalidEntityDataException if price value is less than zero.");
     }
 
     @Test
     void testGetRoomById() {
-        Room room = roomService.getAll().get(0);
+        Room room = roomService.getAll(0).get();
         assertDoesNotThrow(() -> {
             Room foundRoom = roomService.getById(room.getId());
             assertNotNull(foundRoom, "Room mus be not null.");

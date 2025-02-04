@@ -46,8 +46,10 @@ public class RoomMenu {
     private void create() {
         String name = InputValidation.validateStringInput("Enter room name: ");
         double price = InputValidation.validatePriceInput("Enter room price: ");
-        Theme theme = InputValidation.validateEnumInput("Select a theme: ", Theme.class);
-        DifficultyLevel difficultyLevel = InputValidation.validateEnumInput("Select a difficulty level: ", DifficultyLevel.class);
+        String themeStr = InputValidation.validateEnumInput("Select a theme:", Theme.class);
+        Theme theme = Theme.valueOf(themeStr.toUpperCase());
+        String difficultyStr = InputValidation.validateEnumInput("Select a difficulty level:", DifficultyLevel.class);
+        DifficultyLevel difficultyLevel = DifficultyLevel.valueOf(difficultyStr.toUpperCase());
 
         roomController.add(name, price, theme, difficultyLevel);
     }

@@ -52,9 +52,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room getById(int id) throws EntityNotFoundException {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Room ID must be greater than 0.");
-        }
+        if (id <= 0) throw new IllegalArgumentException("Room ID must be greater than 0.");
         Room room = daoRoom.getById(id);
         if (room == null) {
             throw new EntityNotFoundException("Clue not found for ID: " + id);
