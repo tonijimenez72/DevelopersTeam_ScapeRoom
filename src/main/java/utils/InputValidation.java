@@ -125,7 +125,7 @@ public class InputValidation {
         return price;
     }
 
-    public static <T extends Enum<T>> T validateEnumInput(String prompt, Class<T> enumClass) {
+   public static <T extends Enum<T>> String validateEnumInput(String prompt, Class<T> enumClass) {
         T[] values = enumClass.getEnumConstants();
 
         System.out.println(prompt);
@@ -137,7 +137,7 @@ public class InputValidation {
         while (true) {
             choice = validateIntInput("Choose an option: ");
             if (choice >= 1 && choice <= values.length) {
-                return values[choice - 1];
+                return values[choice - 1].name();
             }
             System.out.println("Invalid choice. Please try again.");
         }

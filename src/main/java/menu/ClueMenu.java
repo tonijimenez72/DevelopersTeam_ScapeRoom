@@ -51,7 +51,8 @@ public class ClueMenu {
     private void create() {
         String name = InputValidation.validateStringInput("Enter name: ");
         double price = InputValidation.validatePriceInput("Enter price: ");
-        Theme theme = InputValidation.validateEnumInput("Select a theme: ", Theme.class);
+        String themeStr = InputValidation.validateEnumInput("Select a theme:", Theme.class);
+        Theme theme = Theme.valueOf(themeStr.toUpperCase());
         int roomId = InputValidation.validateIdInput("Enter room ID: ");
 
         clueController.add(name, price, theme, roomId);

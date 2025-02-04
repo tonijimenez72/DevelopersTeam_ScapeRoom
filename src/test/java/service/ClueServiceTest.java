@@ -21,7 +21,7 @@ class ClueServiceTest {
     void createClueTest_IsOK() {
         String name = "Test clue";
         double price = 20.0;
-        Theme theme = Theme.MISTERY;
+        Theme theme = Theme.MYSTERY;
         int roomId = 1;
 
         assertDoesNotThrow(() -> clueService.create(name, price, theme, roomId));
@@ -31,7 +31,7 @@ class ClueServiceTest {
     void createClueTest_InvalidIfPriceIsLessThanZero() {
         String name = "Test clue";
         double price = -20.0;
-        Theme theme = Theme.MISTERY;
+        Theme theme = Theme.MYSTERY;
         int roomId = 1;
 
         assertThrows(InvalidEntityDataException.class, () -> clueService.create(name, price, theme, roomId));
@@ -41,7 +41,7 @@ class ClueServiceTest {
     void createClueTest_InvalidIfEmptyName() {
         String name = "";
         double price = 20.0;
-        Theme theme = Theme.MISTERY;
+        Theme theme = Theme.MYSTERY;
         int roomId = 1;
 
         assertThrows(InvalidEntityDataException.class, () -> clueService.create(name, price, theme, roomId));
