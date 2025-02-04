@@ -4,6 +4,7 @@ import database.DatabaseConnection;
 import exception.EntityNotFoundException;
 import menu.MainMenu;
 
+
 public class Main {
     public static void main(String[] args) throws EntityNotFoundException {
         try {
