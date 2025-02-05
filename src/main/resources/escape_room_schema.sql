@@ -12,7 +12,7 @@ CREATE TABLE escape_room (
 CREATE TABLE room (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
-  theme ENUM ('MYSTERY', 'FANTASY', 'CIFI'),
+  theme ENUM ('MYSTERY', 'FANTASY', 'SCIFI'),
   difficulty_level ENUM ('EASY', 'MEDIUM', 'HARD') NOT NULL,
   price DOUBLE NOT NULL,
   escape_room_id INT,
