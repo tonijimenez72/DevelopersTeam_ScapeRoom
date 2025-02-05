@@ -133,7 +133,7 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
 
         System.out.printf(
                 "ESCAPE ROOM TICKET%nPlayer: %s%nRoom: %s%nPrice: €%.2f%nWELCOME AND HAVE FUN!%n",
-                player.getName(), room.getName(), room.getTotalPrice()
+                player.getName(), room.getName(), room.getPrice()
         );
     }
 

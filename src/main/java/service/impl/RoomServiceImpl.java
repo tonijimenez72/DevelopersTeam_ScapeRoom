@@ -32,11 +32,13 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void create(String name, double price, Theme theme, DifficultyLevel difficultyLevel) throws InvalidEntityDataException {
         List<EscapeRoom> escapeRooms = daoEscapeRoom.getAll();
-        int escapeRoomId = escapeRooms.get(0).getId();
 
         if (escapeRooms.isEmpty()) {
             throw new InvalidEntityDataException("Cannot create a room. Must create an escape room first.");
         }
+
+        int escapeRoomId = escapeRooms.get(0).getId();
+
         if (name == null || name.isEmpty() || price < 0) {
             throw new InvalidEntityDataException("Invalid room data: Name cannot be empty and price cannot be negative.");
         }
