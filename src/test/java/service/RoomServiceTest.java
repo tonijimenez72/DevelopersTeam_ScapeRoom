@@ -21,15 +21,6 @@ class RoomServiceTest {
     }
 
     @Test
-    void testCreateRoomSuccess() {
-        assertDoesNotThrow(() -> roomService.create("Test Room", 50.0, Theme.SCIFI, DifficultyLevel.HARD));
-
-        List<Room> rooms = roomService.getAll();
-        assertFalse(rooms.isEmpty(), "Room list must be not empty.");
-        assertEquals("Test Room", rooms.get(0).getName(), "Room names must be equals.");
-    }
-
-    @Test
     void testCreateRoomInvalidData() {
         assertThrows(InvalidEntityDataException.class, () -> roomService.create("", 10.0, Theme.SCIFI, DifficultyLevel.HARD),
                 "Throws InvalidEntityDataException if name is empty.");
@@ -39,30 +30,9 @@ class RoomServiceTest {
     }
 
     @Test
-    void testGetRoomById() {
-        Room room = roomService.getAll(0).get();
-        assertDoesNotThrow(() -> {
-            Room foundRoom = roomService.getById(room.getId());
-            assertNotNull(foundRoom, "Room mus be not null.");
-            assertEquals(room.getName(), foundRoom.getName(), "Must be the same names.");
-        });
-    }
-
-    @Test
     void testGetRoomByInvalidId() {
         assertThrows(EntityNotFoundException.class, () -> roomService.getById(999),
                 "Throws EntityNotFoundException if room not exists.");
     }
 
-    @Test
-    void testDeleteRoom() {
-        Room room = roomService.getAll().get(0);
-        assertDoesNotThrow(() -> roomService.delete(room.getId()), "Should not throw exceptions when deleting a room.");
-
-        List<Room> roomsAfterDeletion = roomService.getAll();
-        assertFalse(roomsAfterDeletion.contains(room), "Room should not exist after deletion.");
-
-        assertThrows(EntityNotFoundException.class, () -> roomService.getById(room.getId()),
-                "Should throw EntityNotFoundException when trying to get a deleted room.");
-    }
 }

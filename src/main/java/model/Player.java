@@ -3,7 +3,6 @@ package model;
 import utils.NotificationObserver;
 
 public class Player implements NotificationObserver {
-    private static int counter = 1;
     private int id;
     private String name;
     private String email;
@@ -61,6 +60,6 @@ public class Player implements NotificationObserver {
 
     @Override
     public String toString() {
-        return String.format("Player:%n Name: %s | Email: %s | Subscriber: %s%n", name, email, subscriber);
+        return String.format("Playe ID: %s | Name: %s | Email: %s | Subscriber: %s", id, name, email, subscriber);
     }
 }

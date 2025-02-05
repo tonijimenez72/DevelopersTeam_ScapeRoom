@@ -57,12 +57,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void delete(int id) throws EntityNotFoundException {
-        Player player = getById(id);
-        daoPlayer.remove(player);
-    }
-
-    @Override
     public void addSubscription(int id) {
         try {
             Player player = getById(id);

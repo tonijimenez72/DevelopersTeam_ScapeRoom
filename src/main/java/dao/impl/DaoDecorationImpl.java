@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DaoDecorationImpl implements DaoDecoration {
+    private static final String INSERT_QUERY = "INSERT INTO decoration (name, material, price, room_id) VALUES (?, ?, ?, ?)";
+    public static final String GET_ALL_QUERY = "SELECT * From decoration";
+    public static final String GET_BY_ID_QUERY = "SELECT * FROM decoration WHERE id = ? ";
+    public static final String DELETE_QUERY = "DELETE FROM decoration WHERE id = ?";
 
     @Override
     public void save(Decoration decoration) {
-        String query = "INSERT INTO decoration (name, material, price, room_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
             statement.setString(1, decoration.getName());
             statement.setString(2, decoration.getMaterial());
             statement.setDouble(3, decoration.getPrice());
@@ -31,9 +34,9 @@ public class DaoDecorationImpl implements DaoDecoration {
     @Override
     public List<Decoration> getAll() {
         List<Decoration> decorations = new ArrayList<>();
-        String query = "SELECT * FROM decoration";
+
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Decoration decoration = new Decoration();
@@ -52,10 +55,9 @@ public class DaoDecorationImpl implements DaoDecoration {
 
     @Override
     public Decoration getById(int id) {
-        String query = "SELECT * FROM decoration WHERE id = ?";
         Decoration decoration = null;
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -75,14 +77,10 @@ public class DaoDecorationImpl implements DaoDecoration {
 
     @Override
     public void remove(Decoration decoration) {
-
-        String query = "UPDATE decoration SET is_deleted = ? WHERE id = ?";
-
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
 
-            statement.setBoolean(1, true);
-            statement.setInt(2, decoration.getId());
+            statement.setInt(1, decoration.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error removing decoration form : " + e.getMessage());

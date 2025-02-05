@@ -35,6 +35,7 @@ public class ClueMenu {
 
         while (true) {
             showMenu();
+
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
@@ -53,6 +54,9 @@ public class ClueMenu {
         double price = InputValidation.validatePriceInput("Enter price: ");
         String themeStr = InputValidation.validateEnumInput("Select a theme:", Theme.class);
         Theme theme = Theme.valueOf(themeStr.toUpperCase());
+
+        roomController.showAll();
+
         int roomId = InputValidation.validateIdInput("Enter room ID: ");
 
         clueController.add(name, price, theme, roomId);
@@ -60,11 +64,8 @@ public class ClueMenu {
 
     private void read() {
         int id = InputValidation.validateIntInput("Enter id: ");
-        Clue clue = clueController.getById(id);
 
-        if (clue == null) {
-            System.out.println("Clue not found.");
-        }
+        clueController.getById(id);
     }
 
     private void readAll() {
@@ -73,11 +74,7 @@ public class ClueMenu {
 
     private void delete() {
         int id = InputValidation.validateIntInput("Enter id: ");
-        try {
-            clueController.delete(id);
-            System.out.println("Clue removed successfully.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error deleting clue: " + e.getMessage());
-        }
+
+        clueController.delete(id);
     }
 }

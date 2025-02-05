@@ -33,6 +33,7 @@ public class DecorationMenu {
 
         while (true) {
             showMenu();
+
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
@@ -52,6 +53,9 @@ public class DecorationMenu {
         String name = InputValidation.validateStringInput("Enter name: ");
         double price = InputValidation.validatePriceInput("Enter price: ");
         String material = InputValidation.validateStringInput("Enter material: ");
+
+        roomController.showAll();
+
         int roomId = InputValidation.validateIdInput("Enter room ID: ");
 
         decorationController.add(name, price, material, roomId);
@@ -59,10 +63,9 @@ public class DecorationMenu {
 
     private void read() {
         int id = InputValidation.validateIntInput("Enter decoration id: ");
-        Decoration decoration = decorationController.getById(id);
-        if (decoration == null) {
-            System.out.println("Decoration not found.");
-        }
+
+        decorationController.getById(id);
+
     }
 
     private void readAll() {
@@ -71,12 +74,7 @@ public class DecorationMenu {
 
     private void delete() {
         int id = InputValidation.validateIntInput("Enter id: ");
-        try {
-            decorationController.delete(id);
 
-            System.out.println("Decoration removed successfully.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error deleting decoration: " + e.getMessage());
-        }
+        decorationController.delete(id);
     }
 }

@@ -17,11 +17,10 @@ public class PlayerMenu {
                 1. Create player
                 2. Show player
                 3. Show all players
-                4. Delete player
-                5. Add subscription
-                6. Show all subscribers
-                7. Delete subscription
-                8. Send Notification
+                4. Add subscription
+                5. Show all subscribers
+                6. Delete subscription
+                7. Send Notification
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
@@ -32,17 +31,17 @@ public class PlayerMenu {
 
         while (true) {
             showMenu();
+
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> createPlayer();
                 case 2 -> showPlayer();
                 case 3 -> showAllPlayers();
-                case 4 -> deletePlayer();
-                case 5 -> addSubscription();
-                case 6 -> showAllSubscribers();
-                case 7 -> deleteSubscription();
-                case 8 -> sendNotification();
+                case 4 -> addSubscription();
+                case 5 -> showAllSubscribers();
+                case 6 -> deleteSubscription();
+                case 7 -> sendNotification();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
@@ -58,12 +57,9 @@ public class PlayerMenu {
 
     private void showPlayer() {
         int id = InputValidation.validateIntInput("Enter ID: ");
-        try {
-            Player player = playerController.getById(id);
-            System.out.println(player);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+
+        playerController.getById(id);
+
     }
 
     private void showAllPlayers() {
@@ -71,6 +67,8 @@ public class PlayerMenu {
     }
   
     private void addSubscription() {
+        playerController.showAll();
+
         int id = InputValidation.validateIntInput("Enter ID: ");
         playerController.addSubscription(id);
     }
@@ -80,17 +78,11 @@ public class PlayerMenu {
     }
 
     private void deleteSubscription() {
+        playerController.showAllSubscribers();
+
         int id = InputValidation.validateIntInput("Enter ID: ");
-        if (id == -1) return;
 
         playerController.deleteSubscription(id);
-    }
-
-    private void deletePlayer() {
-        int id = InputValidation.validateIntInput("Enter ID: ");
-        if (id == -1) return;
-
-        playerController.delete(id);
     }
 
     private void sendNotification(){

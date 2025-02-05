@@ -24,13 +24,13 @@ public class Room {
         this.theme = theme;
         this.difficultyLevel = difficultyLevel;
         this.escapeRoomId = escapeRoomId;
-        this.ticketPrice = difficultyLevel.getAmount(); // ✅ Inicializamos ticketPrice
+        this.ticketPrice = difficultyLevel.getAmount();
     }
 
     public int getId() { return id; }
     public String getName() { return name; }
     public double getPrice() { return price; }
-    public double getTicketPrice() { return ticketPrice; } // ✅ Getter para ticketPrice
+    public double getTicketPrice() { return ticketPrice; }
     public Theme getTheme() { return theme; }
     public DifficultyLevel getDifficultyLevel() { return difficultyLevel; }
     public int getEscapeRoomId() { return escapeRoomId; }
@@ -43,7 +43,7 @@ public class Room {
 
     public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
-        this.ticketPrice = difficultyLevel.getAmount(); // ✅ Si cambia la dificultad, actualizamos el ticketPrice
+        this.ticketPrice = difficultyLevel.getAmount();
     }
 
     public void setTheme(Theme theme) { this.theme = theme; }
@@ -52,18 +52,18 @@ public class Room {
     public void setDecorations(List<Decoration> decorations) { this.decorations = decorations; }
 
     public double getTotalPrice() {
-        return ticketPrice; // ✅ Ahora `getTotalPrice()` devuelve `ticketPrice` directamente
+        return ticketPrice;
     }
 
     @Override
     public String toString() {
         String cluesList = (clues != null && !clues.isEmpty())
                 ? clues.stream().map(Clue::toString).collect(Collectors.joining("\n"))
-                : "None";
+                : " None";
 
         String decorationsList = (decorations != null && !decorations.isEmpty())
                 ? decorations.stream().map(Decoration::toString).collect(Collectors.joining("\n"))
-                : "None";
+                : " None";
 
         return String.format(
                 "Room: ID: %s | Name: %s | Price: %.2f | Ticket Price: %.2f | Theme: %s | Difficulty: %s%n Clues:%n%s%n Decorations:%n%s%nTotal Price: %.2f%n",

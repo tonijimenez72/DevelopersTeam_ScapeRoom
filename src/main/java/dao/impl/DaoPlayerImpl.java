@@ -10,15 +10,15 @@ import java.util.List;
 
 public class DaoPlayerImpl implements DaoPlayer {
 
+    public static final String UPDATE_QUERY = "UPDATE player SET name = ?, email = ?, subscriber = ?, escape_room_id = ? WHERE id = ?";
+    public static final String INSERT_QUERY = "INSERT INTO player (name, email, subscriber, escape_room_id) VALUES (?, ?, ?, ?)";
+    public static final String GET_ALL_QUERY = "SELECT * FROM player";
+    public static final String GET_BY_ID_QUERY = "SELECT * FROM player WHERE id = ?";
+
     @Override
     public void save(Player player) {
-        String query;
 
-        if (player.getId() > 0) {
-            query = "UPDATE player SET name = ?, email = ?, subscriber = ?, escape_room_id = ? WHERE id = ?";
-        } else {
-            query = "INSERT INTO player (name, email, subscriber, escape_room_id) VALUES (?, ?, ?, ?)";
-        }
+        String query = (player.getId() > 0)? UPDATE_QUERY : INSERT_QUERY;
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -56,10 +56,9 @@ public class DaoPlayerImpl implements DaoPlayer {
     @Override
     public List<Player> getAll() {
         List<Player> players = new ArrayList<>();
-        String query = "SELECT * FROM player";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -82,11 +81,10 @@ public class DaoPlayerImpl implements DaoPlayer {
 
     @Override
     public Player getById(int id) {
-        String query = "SELECT * FROM player WHERE id = ?";
         Player player = null;
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID_QUERY)) {
 
             statement.setInt(1, id);
 
@@ -108,18 +106,4 @@ public class DaoPlayerImpl implements DaoPlayer {
         return player;
     }
 
-    @Override
-    public void remove(Player player) {
-        String query = "DELETE FROM player WHERE id = ?";
-
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setInt(1, player.getId());
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            System.err.println("Error removing player: " + e.getMessage());
-        }
-    }
 }

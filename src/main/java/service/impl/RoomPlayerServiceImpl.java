@@ -20,13 +20,13 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
     private final DaoRoomPlayer daoRoomPlayer;
     private final RoomService roomService;
     private final PlayerService playerService;
-    private final TicketService ticketService; // ✅ Agregado para guardar tickets
+    private final TicketService ticketService;
 
     public RoomPlayerServiceImpl(RoomService roomService, PlayerService playerService, TicketService ticketService) {
         this.daoRoomPlayer = new DaoRoomPlayerImpl();
         this.roomService = roomService;
         this.playerService = playerService;
-        this.ticketService = ticketService; // ✅ Inicializado
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -46,10 +46,10 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
 
         printTicket(player, room);
 
-         Ticket ticket = new Ticket(roomId, playerId, room.getTotalPrice());
+        Ticket ticket = new Ticket(roomId, playerId, room.getTotalPrice());
         ticketService.save(ticket);
 
-        String notificationMessage = String.format("Player: %s has reserved the room: %s", player.getName(), room.getName());
+        String notificationMessage = String.format("Player: %s is playing the room: %s", player.getName(), room.getName());
         playerService.sendNotification(notificationMessage);
     }
 
@@ -57,34 +57,6 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
     public void removePlayerFromRoom(int playerId, int roomId) {
         RoomPlayer roomPlayer = new RoomPlayer(playerId, roomId, false);
         daoRoomPlayer.remove(roomPlayer);
-    }
-
-    @Override
-    public List<RoomPlayer> playerPlayedRooms(int playerId) throws EntityNotFoundException {
-        if (playerId <= 0) {
-            throw new IllegalArgumentException("Player ID must be greater than zero.");
-        }
-
-        List<RoomPlayer> rooms = daoRoomPlayer.getRoomsByPlayerId(playerId);
-        if (rooms.isEmpty()) {
-            throw new EntityNotFoundException("No rooms found for Player ID: " + playerId);
-        }
-
-        return rooms;
-    }
-
-    @Override
-    public List<RoomPlayer> roomPlayedByPlayers(int roomId) throws EntityNotFoundException {
-        if (roomId <= 0) {
-            throw new IllegalArgumentException("Room ID must be greater than zero.");
-        }
-
-        List<RoomPlayer> players = daoRoomPlayer.getPlayersByRoomId(roomId);
-        if (players.isEmpty()) {
-            throw new EntityNotFoundException("No players found for Room ID: " + roomId);
-        }
-
-        return players;
     }
 
     @Override
@@ -104,27 +76,11 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
 
         if (isSolved) {
             printCertificate(player, room);
+
+            String notificationMessage = String.format("Player: %s hs solved the room: %s", player.getName(), room.getName());
+            playerService.sendNotification(notificationMessage);
         }
     }
-
-    @Override
-    public List<Room> roomsSolvedByPlayer(int playerId) throws EntityNotFoundException {
-        if (playerId <= 0) {
-            throw new IllegalArgumentException("Player ID must be greater than zero.");
-        }
-
-        List<Room> solvedRooms = daoRoomPlayer.getRoomsByPlayerId(playerId).stream()
-                .filter(RoomPlayer::isSolved)
-                .map(RoomPlayer::getRoom)
-                .collect(Collectors.toList());
-
-        if (solvedRooms.isEmpty()) {
-            throw new EntityNotFoundException("No solved rooms found for Player ID: " + playerId);
-        }
-
-        return solvedRooms;
-    }
-
 
     private void printTicket(Player player, Room room) throws EntityNotFoundException {
         if (player == null || room == null) {
@@ -133,7 +89,7 @@ public class RoomPlayerServiceImpl implements RoomPlayerService {
 
         System.out.printf(
                 "ESCAPE ROOM TICKET%nPlayer: %s%nRoom: %s%nPrice: €%.2f%nWELCOME AND HAVE FUN!%n",
-                player.getName(), room.getName(), room.getPrice()
+                player.getName(), room.getName(), room.getTicketPrice()
         );
     }
 

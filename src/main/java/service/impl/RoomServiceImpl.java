@@ -1,5 +1,6 @@
 package service.impl;
 
+import controller.PlayerController;
 import dao.DaoEscapeRoom;
 import dao.DaoRoom;
 import dao.DaoClue;
@@ -12,6 +13,7 @@ import enums.*;
 import exception.EntityNotFoundException;
 import exception.InvalidEntityDataException;
 import model.*;
+import service.PlayerService;
 import service.RoomService;
 
 import java.util.List;
@@ -21,12 +23,14 @@ public class RoomServiceImpl implements RoomService {
     private final DaoEscapeRoom daoEscapeRoom;
     private final DaoClue daoClue;
     private final DaoDecoration daoDecoration;
+    private final PlayerService playerService;
 
     public RoomServiceImpl() {
         this.daoRoom = new DaoRoomImpl();
         this.daoEscapeRoom = new DaoEscapeRoomImpl();
         this.daoClue = new DaoClueImpl();
         this.daoDecoration = new DaoDecorationImpl();
+        this.playerService = new PlayerServiceImpl();
     }
 
     @Override
@@ -45,6 +49,9 @@ public class RoomServiceImpl implements RoomService {
 
         Room room = new Room(name, price, theme, difficultyLevel, escapeRoomId);
         daoRoom.save(room);
+
+        String notificationMessage = String.format("%nNew room created: %s | Theme: %s", room.getName(), room.getTheme());
+        playerService.sendNotification(notificationMessage);
     }
 
     @Override

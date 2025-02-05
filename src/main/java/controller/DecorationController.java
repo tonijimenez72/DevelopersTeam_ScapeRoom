@@ -32,18 +32,18 @@ public class DecorationController {
         }
     }
 
-    public Decoration getById(int id) {
+    public void getById(int id) {
         try {
-            return decorationService.getById(id);
+            System.out.println(decorationService.getById(id));
         } catch (Exception e) {
             GlobalExceptionHandler.handleException(e);
         }
-        return null;
     }
 
     public void delete(int id) {
         try {
             decorationService.delete(id);
+            System.out.println("Decoration removed successfully.");
         } catch (Exception e) {
             GlobalExceptionHandler.handleException(e);
         }

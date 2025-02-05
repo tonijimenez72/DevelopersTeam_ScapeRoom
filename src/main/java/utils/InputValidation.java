@@ -18,6 +18,7 @@ public class InputValidation {
             System.out.print(prompt);
             if (scanner.hasNextInt()) {
                 input = scanner.nextInt();
+
                 valid = true;
             } else {
                 System.out.println("Invalid input. Please enter an integer.");
@@ -65,16 +66,17 @@ public class InputValidation {
             System.out.print(prompt);
             if (scanner.hasNextInt()) {
                 input = scanner.nextInt();
-                scanner.nextLine();
+
                 if (input > 0) {
                     return input;
                 } else {
                     System.out.println("Invalid input. ID must be greater than zero.");
                 }
+                scanner.nextLine();
             } else {
                 System.out.println("Invalid input. Please enter a positive integer.");
-                scanner.next();
             }
+
         }
     }
 
@@ -110,6 +112,7 @@ public class InputValidation {
             System.out.print(prompt);
             if (scanner.hasNextDouble()) {
                 price = scanner.nextDouble();
+                scanner.nextLine();
                 if (price >= 0) {
                     valid = true;
                 } else {
@@ -117,7 +120,6 @@ public class InputValidation {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid price.");
-                scanner.next();
             }
         }
 

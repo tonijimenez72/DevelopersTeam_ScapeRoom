@@ -12,6 +12,7 @@ public class Main {
             DatabaseConnection.getInstance().testConnection();
             DependencyInjector injector = new EscapeRoomDependencyInjector();
             MainMenu mainMenu = injector.initializeApplication();
+
             mainMenu.run();
         } finally {
             InputValidation.closeScanner();

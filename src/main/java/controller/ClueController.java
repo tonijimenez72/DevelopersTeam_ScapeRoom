@@ -33,13 +33,12 @@ public class ClueController {
         }
     }
 
-    public Clue getById(int id) {
+    public void getById(int id) {
         try {
-            return clueService.getById(id);
+            System.out.println(clueService.getById(id));
         } catch (Exception e) {
             GlobalExceptionHandler.handleException(e);
         }
-        return null;
     }
 
     public void delete(int id) {

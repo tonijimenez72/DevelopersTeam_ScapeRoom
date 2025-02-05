@@ -10,5 +10,4 @@ public interface DaoDecoration extends GenericDao<Decoration>{
     List<Decoration> getAll();
     Decoration getById(int id);
     void remove(Decoration decoration);
-
 }

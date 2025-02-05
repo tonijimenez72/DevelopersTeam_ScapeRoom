@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class Ticket {
     private int id;
-    private Integer roomId;  // Debe ser Integer en lugar de int
-    private Integer playerId; // Debe ser Integer en lugar de int
+    private Integer roomId;
+    private Integer playerId;
     private double totalPrice;
     private LocalDateTime createdAt;
 

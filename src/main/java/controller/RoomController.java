@@ -27,7 +27,7 @@ public class RoomController {
         try {
             List<Room> rooms = roomService.getAll();
             if (rooms.isEmpty()) {
-                System.out.println("None.");
+                System.out.println(" None.");
             } else {
                 rooms.forEach(System.out::println);
             }
@@ -36,12 +36,11 @@ public class RoomController {
         }
     }
 
-    public Room getById(int id) {
+    public void getById(int id) {
         try {
-            return roomService.getById(id);
+            System.out.println(roomService.getById(id));
         } catch (Exception e) {
             GlobalExceptionHandler.handleException(e);
-            return null;
         }
     }
 

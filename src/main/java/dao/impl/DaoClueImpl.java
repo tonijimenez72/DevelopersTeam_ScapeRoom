@@ -4,6 +4,7 @@ import dao.DaoClue;
 import database.DatabaseConnection;
 import enums.Theme;
 import model.Clue;
+import model.Decoration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,15 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DaoClueImpl implements DaoClue {
-
+    private static final String INSERT_QUERY = "INSERT INTO clue (name, theme, price, room_id) VALUES (?, ?, ?, ?)";
+    public static final String GET_ALL_QUERY = "SELECT * From clue";
+    public static final String GET_BY_ID_QUERY = "SELECT * FROM clue WHERE id = ? ";
+    public static final String DELETE_QUERY = "DELETE FROM clue WHERE id = ?";
 
     @Override
     public void save(Clue clue) {
 
-        String query = "INSERT INTO clue (name, theme, price, room_id) VALUES (?, ?, ?, ?)";
-
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY)) {
 
             statement.setString(1, clue.getName());
             statement.setString(2, clue.getTheme().name());
@@ -40,10 +42,8 @@ public class DaoClueImpl implements DaoClue {
 
         List<Clue> clues = new ArrayList<>();
 
-        String query = "SELECT * From clue";
-
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
 
@@ -67,12 +67,10 @@ public class DaoClueImpl implements DaoClue {
 
     @Override
     public Clue getById(int id) {
-
-        String query = "SELECT * FROM clue WHERE id = ? ";
         Clue clue = null;
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID_QUERY)) {
 
             statement.setInt(1, id);
 
@@ -98,10 +96,9 @@ public class DaoClueImpl implements DaoClue {
 
     @Override
     public void remove(Clue clue) {
-        String query = "DELETE FROM clue WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
 
             statement.setInt(1, clue.getId());
             statement.executeUpdate();

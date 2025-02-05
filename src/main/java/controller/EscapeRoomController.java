@@ -25,11 +25,8 @@ public class EscapeRoomController {
     public void showAll() {
         try {
             List<EscapeRoom> escapeRooms = escapeRoomService.getAll();
-            if (escapeRooms.isEmpty()) {
-                System.out.println("Please, create an Escape Room first.");
-            } else {
-                escapeRooms.forEach(System.out::println);
-            }
+
+            escapeRooms.forEach(System.out::println);
         } catch (Exception e) {
             GlobalExceptionHandler.handleException(e);
         }

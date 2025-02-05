@@ -20,7 +20,7 @@ public class EscapeRoomDependencyInjector implements DependencyInjector {
         ClueController clueController = new ClueController(clueService);
         DecorationController decorationController = new DecorationController(decorationService);
         RoomController roomController = new RoomController(roomService);
-        PlayerController playerController = new PlayerController(playerService);
+        PlayerController playerController = new PlayerController();
         RoomPlayerController roomPlayerController = new RoomPlayerController(roomPlayerService);
         TicketController ticketController = new TicketController(ticketService);
 

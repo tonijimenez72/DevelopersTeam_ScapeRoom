@@ -9,6 +9,4 @@ public interface DaoRoomPlayer extends GenericDao<RoomPlayer> {
     RoomPlayer getById(int id);
     List<RoomPlayer> getAll();
     void remove(RoomPlayer roomPlayer);
-    List<RoomPlayer> getPlayersByRoomId(int roomId);
-    List<RoomPlayer> getRoomsByPlayerId(int playerId);
 }

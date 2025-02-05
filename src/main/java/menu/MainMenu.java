@@ -48,6 +48,7 @@ public class MainMenu {
 
         while (true) {
             showMenu();
+
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {

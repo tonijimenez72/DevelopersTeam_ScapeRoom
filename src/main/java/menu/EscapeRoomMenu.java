@@ -24,11 +24,11 @@ public class EscapeRoomMenu {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
         int choice;
 
         while (true) {
             showMenu();
+
             choice = InputValidation.validateIntInput("Enter your choice: ");
 
             switch (choice) {

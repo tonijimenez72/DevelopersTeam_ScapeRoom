@@ -18,13 +18,14 @@ public class RoomMenu {
                 1. Create room
                 2. Show room
                 3. Show all rooms
-                6. Delete room
+                4. Delete room
                 0. Back to Main Menu
                 """;
         System.out.print(menu);
     }
 
     public void run() {
+
         int choice;
 
         while (true) {
@@ -36,7 +37,7 @@ public class RoomMenu {
                 case 1 -> create();
                 case 2 -> read();
                 case 3 -> readAll();
-                case 6 -> delete();
+                case 4 -> delete();
                 case 0 -> {return;}
                 default -> System.out.println("Invalid option. Please try again.");
             }
@@ -57,11 +58,7 @@ public class RoomMenu {
     private void read() {
         int id = InputValidation.validateIntInput("Enter room id: ");
 
-        Room room = roomController.getById(id);
-
-        if (room == null) {
-            System.out.println("Clue not found.");
-        }
+        roomController.getById(id);
     }
 
     private void readAll() {

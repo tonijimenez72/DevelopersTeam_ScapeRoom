@@ -15,19 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DaoRoomImpl implements DaoRoom {
+    public static final String SAVE_QUERY = "INSERT INTO room (name, price, theme, difficulty_level, escape_room_id) VALUES (?, ?, ?, ?, ?)";
+    public static final String GET_ALL_QUERY = "SELECT * FROM room";
+    public static final String GET_BY_ID_QUERY = "SELECT * FROM room WHERE id = ?";
+    public static final String DELETE_QUERY = "DELETE FROM room WHERE id = ?";
+    public static final String GET_CLUES_IN_THE_ROOM = "SELECT id, name, theme, price FROM clue WHERE room_id = ?";
+    public static final String GET_DECORATION_IN_THE_ROOM = "SELECT id, name, material, price FROM decoration WHERE room_id = ?";
 
     @Override
     public void save(Room room) {
-        String query = "INSERT INTO room (name, price, theme, difficulty_level, escape_room_id) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
 
             statement.setString(1, room.getName());
             statement.setDouble(2, room.getPrice());
             statement.setString(3, room.getTheme().name());
             statement.setString(4, room.getDifficultyLevel().name());
-            statement.setInt(5, room.getEscapeRoomId());  // 🔹 Ahora guardamos el escapeRoomId
+            statement.setInt(5, room.getEscapeRoomId());
 
             statement.executeUpdate();
 
@@ -39,10 +44,9 @@ public class DaoRoomImpl implements DaoRoom {
     @Override
     public List<Room> getAll() {
         List<Room> rooms = new ArrayList<>();
-        String query = "SELECT * FROM room";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -68,14 +72,12 @@ public class DaoRoomImpl implements DaoRoom {
         return rooms;
     }
 
-
     @Override
     public Room getById(int id) {
-        String query = "SELECT * FROM room WHERE id = ?";
         Room room = null;
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_BY_ID_QUERY)) {
 
             statement.setInt(1, id);
 
@@ -103,10 +105,8 @@ public class DaoRoomImpl implements DaoRoom {
 
     @Override
     public void remove(Room room) {
-        String query = "DELETE FROM room WHERE id = ?";
-
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
 
             statement.setInt(1, room.getId());
             statement.executeUpdate();
@@ -117,10 +117,9 @@ public class DaoRoomImpl implements DaoRoom {
 
     private List<Clue> getCluesInTheRoom(int roomId) {
         List<Clue> clues = new ArrayList<>();
-        String query = "SELECT id, name, theme, price FROM clue WHERE room_id = ?";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_CLUES_IN_THE_ROOM)) {
 
             statement.setInt(1, roomId);
             ResultSet resultSet = statement.executeQuery();
@@ -145,10 +144,9 @@ public class DaoRoomImpl implements DaoRoom {
 
     private List<Decoration> getDecorationsInTheRoom(int roomId) {
         List<Decoration> decorations = new ArrayList<>();
-        String query = "SELECT id, name, material, price FROM decoration WHERE room_id = ?";
 
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(GET_DECORATION_IN_THE_ROOM)) {
 
             statement.setInt(1, roomId);
             ResultSet resultSet = statement.executeQuery();
@@ -157,7 +155,7 @@ public class DaoRoomImpl implements DaoRoom {
                 Decoration decoration = new Decoration(
                         resultSet.getString("name"),
                         resultSet.getDouble("price"),
-                        resultSet.getString("material"),  // 🔹 CORREGIDO: Usar "material" en vez de "name"
+                        resultSet.getString("material"),
                         roomId
                 );
                 decoration.setId(resultSet.getInt("id"));
